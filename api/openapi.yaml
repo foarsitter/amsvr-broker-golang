@@ -1,0 +1,7062 @@
+openapi: 3.0.3
+info:
+  description: "# Introductie\n    Voor u heeft u de online documentatie van de AMSVR\
+    \ Broker API. Omdat het een Nederlands domein\n     betreft worden er Engelse\
+    \ en Nederlandse terminologie door elkaar heen gebruikt.\n\nLiefhebbers van de\
+    \ Swagger UI kunnen [hier terecht](/swagger-ui). Daarnaast is de API eveneens\
+    \ beschikbaar\nin de op endpoint niveau zoals bijvoorbeeld [hier](/api/aansluitingen).\n\
+    \n##\n\n\n\n    "
+  title: AMSVR Broker API
+  version: release-0.6.0.24
+externalDocs:
+  description: Swagger UI
+  url: /swagger-ui
+servers:
+- description: Local development server
+  url: http://localhost:8000
+- description: Online development server
+  url: https://broker.amsvr.api.frl
+- description: Test environment
+  url: https://test-broker.amsvr.nl
+- description: Production cluster
+  url: https://broker.amsvr.nl
+tags:
+- name: brandweer
+  x-displayName: Overige
+- description: Het aanmaken van een nieuwe aansluiting zaak gebeurt automatisch via
+    het aansluiting_create endpoint
+  name: nieuwe aansluiting
+paths:
+  /api/aansluitingen:
+    get:
+      operationId: aansluitingen_list
+      parameters:
+      - description: Aansluitnummer
+        explode: true
+        in: query
+        name: aansluitnummer
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: atsp
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: Heeft bijzonderheden
+        explode: true
+        in: query
+        name: bijzonderheden
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - explode: true
+        in: query
+        name: created_after
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: created_before
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: gebruiksfunctie
+        required: false
+        schema:
+          enum:
+          - Andere wetgeving (bv. Milieu- of archiefwetgeving)
+          - Celfunctie
+          - Gelijkwaardige veiligheid (BHVB) doormelden via PAC mogelijk
+          - Gelijkwaardige veiligheid (sprinkler) doormelden via PAC mogelijk
+          - Gezondheidszorgfunctie met bedgebied
+          - Groepszorgwoning voor 24-uurs zorg
+          - Kinderopvang voor kinderen < 4 jaar met vloerhoogte > 1,5 m1 (6 bedjes)
+          - Logiesgebouw zonder 24-uursbewaking met vloerhoogte > 1,5 m1
+          - O.b.v. lokale bestuurlijke afspraken/wensen
+          - O.b.v. lokale leiding brandweerzorg
+          - Zorgclusterwoning voor 24-uurs zorg in een woongebouw
+          nullable: true
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: gemeente
+        required: false
+        schema:
+          nullable: true
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: is_test_aansluiting
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: modified_after
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: modified_before
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: Naam
+        explode: true
+        in: query
+        name: naam
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: Plaats
+        explode: true
+        in: query
+        name: plaats
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Postcode
+        explode: true
+        in: query
+        name: postcode
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Straat
+        explode: true
+        in: query
+        name: straat
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Testperiode verlopen
+        explode: true
+        in: query
+        name: test_expired
+        required: false
+        schema:
+          type: boolean
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAansluitingList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aansluitingen
+    post:
+      description: |2
+
+        # Gegevensvalidatie adressering
+        Om te voorkomen dat er fouten ontstaan in de adressering van aansluitingen worden adressen gevalideerd in de BAG.
+        Hiervoor wordt de API Locatieserver van PDOK gebruikt. Deze dienst is vrijelijk
+        te gebruiken: https://github.com/PDOK/locatieserver/wiki/API-Locatieserver
+
+        Er zijn drie verschillende wegen om een aansluiting correct toe te voegen.
+
+        1. Lookup met bag_lookup_id: via deze methode is het mogelijk om zelf suggesties op te vragen bij de PDOK Locatieserver.
+        Vervolgens halen wij aan onze kant de gevens uit de BAG. Meegestuurde waarden worden voor
+         bijvoorbeeld huisnummer worden genegeerd.
+
+        2. Suggest via Postcode en huisnummer (en optioneel straat, huisletter en toevoeging):
+        via deze methode proberen wij te matchen met de BAG.
+        Als er een match wordt gevonden dan worden de gevens uit BAG als leidend beschouwd.
+
+        3. bag_niet_beschikbaar = True: hierbij wordt een motivatie verwacht in het bag_comment veld. Deze is verplicht.
+        Adresvelden worden via deze weg niet gevalideerd. Wel is het noodzakelijk om de juiste gemeente op te geven.
+      operationId: aansluitingen_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AansluitingRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AansluitingRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AansluitingRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Aansluiting'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aansluitingen
+  /api/aansluitingen/{aansluitnummer}:
+    delete:
+      operationId: aansluitingen_destroy
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: No response body
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aansluitingen
+    get:
+      operationId: aansluitingen_retrieve
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Aansluiting'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aansluitingen
+    put:
+      operationId: aansluitingen_update
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AansluitingRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AansluitingRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AansluitingRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Aansluiting'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aansluitingen
+  /api/aansluitingen/{aansluitnummer}/bestanden:
+    get:
+      operationId: aansluitingen_bestanden_list
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAansluitingBestandList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - bestanden
+    post:
+      operationId: aansluitingen_bestanden_create
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AansluitingBestandRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AansluitingBestandRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AansluitingBestandRequest'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AansluitingBestand'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - bestanden
+  /api/aansluitingen/{aansluitnummer}/contactpersonen:
+    get:
+      operationId: aansluitingen_contactpersonen_list
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedContactPersoonList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aansluitingen
+    post:
+      operationId: aansluitingen_contactpersonen_create
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactPersoonRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ContactPersoonRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ContactPersoonRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactPersoon'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aansluitingen
+  /api/aansluitingen/{aansluitnummer}/lopende-zaak:
+    get:
+      operationId: aansluitingen_lopende_zaak_retrieve
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Zaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aansluitingen
+  /api/aansluitingen/{aansluitnummer}/meldingen:
+    get:
+      operationId: aansluitingen_meldingen_list
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMeldingList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aansluitingen
+    post:
+      operationId: aansluitingen_meldingen_create
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeldingRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MeldingRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MeldingRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Melding'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aansluitingen
+  /api/aansluitingen/{aansluitnummer}/migratie:
+    post:
+      description: Het is mogelijk om een bestaande aansluiting over te nemen van
+        een andere ATSP. Ter verificatie vragen wij om straat + huisnummer (zonder
+        toevoegingen)
+      operationId: aansluitingen_migratie_create
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MigratieRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MigratieRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MigratieRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Aansluiting'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aansluitingen
+  /api/aansluitingen/{aansluitnummer}/sectoren:
+    get:
+      operationId: aansluitingen_sectoren_list
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSectorList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - sectoren
+    post:
+      operationId: aansluitingen_sectoren_create
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SectorRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SectorRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SectorRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sector'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - sectoren
+  /api/aansluitingen/{aansluitnummer}/sectoren/{nummer}:
+    get:
+      operationId: aansluitingen_sectoren_retrieve
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: nummer
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sector'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aansluitingen
+  /api/aansluitingen/{aansluitnummer}/sectoren/{nummer}/toestand:
+    patch:
+      operationId: aansluitingen_sectoren_toestand_partial_update
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: nummer
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSectorToestandRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSectorToestandRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSectorToestandRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SectorToestand'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aansluitingen
+  /api/aansluitingen/{aansluitnummer}/toestand:
+    patch:
+      operationId: aansluitingen_toestand_partial_update
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAansluitingToestandRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAansluitingToestandRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAansluitingToestandRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AansluitingToestand'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aansluitingen
+  /api/aansluitingen/{aansluitnummer}/transities:
+    get:
+      operationId: aansluitingen_transities_retrieve
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transition'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aansluitingen
+    patch:
+      operationId: aansluitingen_transities_partial_update
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTransitionRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTransitionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTransitionRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Aansluiting'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aansluitingen
+  /api/aansluitingen/{aansluitnummer}/validatie:
+    get:
+      operationId: aansluitingen_validatie_retrieve
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationObject'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aansluitingen
+  /api/aansluitingen/aanwezige-criteria/{id}:
+    delete:
+      operationId: aansluitingen_aanwezige_criteria_destroy
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "204":
+          description: No response body
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aanwezige criteria
+    get:
+      operationId: aansluitingen_aanwezige_criteria_retrieve
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AanwezigCriterium'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aanwezige criteria
+    patch:
+      operationId: aansluitingen_aanwezige_criteria_partial_update
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAanwezigCriteriumRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAanwezigCriteriumRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAanwezigCriteriumRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AanwezigCriterium'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aanwezige criteria
+    put:
+      operationId: aansluitingen_aanwezige_criteria_update
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AanwezigCriteriumRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AanwezigCriteriumRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AanwezigCriteriumRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AanwezigCriterium'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aanwezige criteria
+  /api/aansluitingen/bestanden/{id}:
+    delete:
+      operationId: aansluitingen_bestanden_destroy
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "204":
+          description: No response body
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - bestanden
+    get:
+      operationId: aansluitingen_bestanden_retrieve
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AansluitingBestand'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - bestanden
+    patch:
+      operationId: aansluitingen_bestanden_partial_update
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAansluitingBestandRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAansluitingBestandRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAansluitingBestandRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AansluitingBestand'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - bestanden
+    put:
+      operationId: aansluitingen_bestanden_update
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AansluitingBestandRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AansluitingBestandRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AansluitingBestandRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AansluitingBestand'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - bestanden
+  /api/aansluitingen/contactpersonen:
+    get:
+      operationId: contactpersoon_list
+      parameters:
+      - explode: true
+        in: query
+        name: created_after
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: created_before
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: modified_after
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: modified_before
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: voornaam
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedContactPersoonList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - contactpersonen
+  /api/aansluitingen/contactpersonen/{id}:
+    delete:
+      operationId: aansluitingen_contactpersonen_destroy
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "204":
+          description: No response body
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - contactpersonen
+    get:
+      operationId: aansluitingen_contactpersonen_retrieve
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactPersoon'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - contactpersonen
+    patch:
+      operationId: aansluitingen_contactpersonen_partial_update
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedContactPersoonRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedContactPersoonRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedContactPersoonRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactPersoon'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - contactpersonen
+    put:
+      operationId: aansluitingen_contactpersonen_update
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactPersoonRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ContactPersoonRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ContactPersoonRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactPersoon'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - contactpersonen
+  /api/aansluitingen/contactpersonen/{id}/telefoonnummers:
+    get:
+      operationId: aansluitingen_contactpersonen_telefoonnummers_list
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTelefoonnummerList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - telefoonnummers
+    post:
+      operationId: aansluitingen_contactpersonen_telefoonnummers_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelefoonnummerRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TelefoonnummerRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TelefoonnummerRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Telefoonnummer'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - telefoonnummers
+  /api/aansluitingen/search:
+    get:
+      operationId: aansluitingen_search_retrieve
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Search'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aansluitingen
+  /api/aansluitingen/sectoren:
+    get:
+      operationId: sector_list
+      parameters:
+      - explode: true
+        in: query
+        name: bag_niet_beschikbaar
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - explode: true
+        in: query
+        name: huisnummer
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: is_bouwdeel_null
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: modified_after
+        required: false
+        schema:
+          format: date
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: modified_before
+        required: false
+        schema:
+          format: date
+          type: string
+        style: form
+      - description: Naam
+        explode: true
+        in: query
+        name: naam
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: Postcode
+        explode: true
+        in: query
+        name: postcode
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSectorList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - sectoren
+  /api/aansluitingen/sectoren/{id}:
+    delete:
+      operationId: aansluitingen_sectoren_destroy
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "204":
+          description: No response body
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - sectoren
+    get:
+      operationId: aansluitingen_sectoren_retrieve_by_id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sector'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - sectoren
+    put:
+      operationId: aansluitingen_sectoren_update
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SectorRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SectorRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SectorRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sector'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - sectoren
+  /api/aansluitingen/sectoren/{id}/aanwezige-criteria:
+    get:
+      operationId: aansluitingen_sectoren_aanwezige_criteria_list
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAanwezigCriteriumList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aanwezige criteria
+    post:
+      operationId: aansluitingen_sectoren_aanwezige_criteria_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AanwezigCriteriumRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AanwezigCriteriumRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AanwezigCriteriumRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AanwezigCriterium'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aanwezige criteria
+  /api/aansluitingen/sectoren/{id}/toestand:
+    patch:
+      operationId: aansluitingen_sectoren_toestand_partial_update_by_id
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSectorToestandRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSectorToestandRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSectorToestandRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SectorToestand'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - sectoren
+  /api/aansluitingen/sectoren/{id}/waarschuwingsadressen:
+    get:
+      description: Overzicht van waarschuwingsadressen van de opgegeven sector
+      operationId: aansluitingen_sectoren_waarschuwingsadressen_list
+      parameters:
+      - description: A unique integer value identifying this Sector
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedWaarschuwingsadresList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - waarschuwingsadressen
+    post:
+      description: Waarschuwingsadres toevoegen
+      operationId: aansluitingen_sectoren_waarschuwingsadressen_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WaarschuwingsadresRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WaarschuwingsadresRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WaarschuwingsadresRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Waarschuwingsadres'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - waarschuwingsadressen
+  /api/aansluitingen/telefoonnummers/{id}:
+    delete:
+      operationId: aansluitingen_telefoonnummers_destroy
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "204":
+          description: No response body
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - telefoonnummers
+    get:
+      operationId: aansluitingen_telefoonnummers_retrieve
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Telefoonnummer'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - telefoonnummers
+    patch:
+      operationId: aansluitingen_telefoonnummers_partial_update
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTelefoonnummerRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTelefoonnummerRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTelefoonnummerRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Telefoonnummer'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - telefoonnummers
+    put:
+      operationId: aansluitingen_telefoonnummers_update
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelefoonnummerRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TelefoonnummerRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TelefoonnummerRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Telefoonnummer'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - telefoonnummers
+  /api/aansluitingen/waarschuwingsadressen/{id}:
+    delete:
+      operationId: aansluitingen_waarschuwingsadressen_destroy
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "204":
+          description: No response body
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - waarschuwingsadressen
+    get:
+      operationId: aansluitingen_waarschuwingsadressen_retrieve
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Waarschuwingsadres'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - waarschuwingsadressen
+    patch:
+      operationId: aansluitingen_waarschuwingsadressen_partial_update
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedWaarschuwingsadresRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedWaarschuwingsadresRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedWaarschuwingsadresRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Waarschuwingsadres'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - waarschuwingsadressen
+    put:
+      operationId: aansluitingen_waarschuwingsadressen_update
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WaarschuwingsadresRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WaarschuwingsadresRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WaarschuwingsadresRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Waarschuwingsadres'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - waarschuwingsadressen
+  /api/afspraken/:
+    get:
+      operationId: afspraken_list
+      parameters:
+      - explode: true
+        in: query
+        name: eind_tijd
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: start_tijd
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAfspraakList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - afspraken
+  /api/afspraken/{id}:
+    get:
+      operationId: afspraken_retrieve
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Afspraak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - afspraken
+    patch:
+      operationId: afspraken_partial_update
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAfspraakRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAfspraakRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAfspraakRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Afspraak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - afspraken
+    put:
+      operationId: afspraken_update
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AfspraakRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AfspraakRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AfspraakRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Afspraak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - afspraken
+  /api/afspraken/{id}/verplaatsen:
+    post:
+      operationId: afspraken_verplaatsen_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AfspraakVerplaatsenRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AfspraakVerplaatsenRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AfspraakVerplaatsenRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AfspraakVerplaatsen'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - afspraken
+  /api/afspraken/beschikbaarheid/{regio_code}/dagen:
+    get:
+      description: Haal de dagen op wanneer de AMS servicedesk beschikbaar is
+      operationId: afspraken_beschikbaarheid_dagen_retrieve
+      parameters:
+      - explode: false
+        in: path
+        name: regio_code
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bookabledays'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - afspraken
+  /api/afspraken/beschikbaarheid/{regio_code}/tijdslots/{date}:
+    get:
+      description: Haal de beschikbare tijdslots op voor een dag
+      operationId: afspraken_beschikbaarheid_tijdslots_retrieve
+      parameters:
+      - explode: false
+        in: path
+        name: date
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: regio_code
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookableTimes'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - afspraken
+  /api/afspraken/create/{regio_code}:
+    post:
+      operationId: afspraken_create_create
+      parameters:
+      - explode: false
+        in: path
+        name: regio_code
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AfspraakRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AfspraakRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AfspraakRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Afspraak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - afspraken
+  /api/atsps:
+    get:
+      operationId: atsps_list
+      parameters:
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedATSPList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - atsps
+  /api/brandweer/gemeentes:
+    get:
+      operationId: brandweer_gemeentes_list
+      parameters:
+      - explode: true
+        in: query
+        name: afkorting
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: naam
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: plaatsen
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: provincie_afkorting
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: regio
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedGemeenteList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - brandweer
+  /api/brandweer/gemeentes/{id}:
+    get:
+      operationId: brandweer_gemeentes_retrieve
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Gemeente'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - brandweer
+  /api/brandweer/meldkamers:
+    get:
+      operationId: brandweer_meldkamers_list
+      parameters:
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMeldkamerList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - brandweer
+  /api/brandweer/meldkamers/{id}:
+    get:
+      operationId: brandweer_meldkamers_retrieve
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meldkamer'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - brandweer
+  /api/brandweer/meldkamers/{id}/criteria:
+    get:
+      operationId: brandweer_meldkamers_criteria_list
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCriteriumList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - brandweer
+  /api/brandweer/regios:
+    get:
+      operationId: brandweer_regios_list
+      parameters:
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: meldkamer
+        required: false
+        schema:
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: naam
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRegioList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - brandweer
+  /api/brandweer/regios/{id}:
+    get:
+      operationId: brandweer_regios_retrieve
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Regio'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - brandweer
+  /api/meldingen:
+    get:
+      operationId: meldingen_list
+      parameters:
+      - explode: true
+        in: query
+        name: actueel
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - explode: true
+        in: query
+        name: created_after
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: created_before
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: criterium
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: modified_after
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: modified_before
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: 0 = Actief, 1 = test, 2 = Passief
+        explode: true
+        in: query
+        name: toestand
+        required: false
+        schema:
+          enum:
+          - 0
+          - 1
+          - 2
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMeldingList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - meldingen
+  /api/zaken/afsluiting/:
+    get:
+      operationId: zaken_afsluiting_list
+      parameters:
+      - explode: true
+        in: query
+        name: gesloten
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: nieuw = Afsluiting, ingediend = Ingediend [ATSP], afgewezen =
+          Afgewezen [Risicobeheer], goedgekeurd = Goedgekeurd [Risicobeheer], bevestigd
+          = Bevestigd [ATSP], uitgevoerd = Uitgevoerd [AMS-Servicedesk], geannuleerd
+          = Geannuleerd
+        explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          enum:
+          - afgewezen
+          - bevestigd
+          - geannuleerd
+          - goedgekeurd
+          - ingediend
+          - nieuw
+          - uitgevoerd
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAfsluitingZaakList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - afsluiting
+  /api/zaken/afsluiting/{id}:
+    get:
+      operationId: zaken_afsluiting_retrieve
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AfsluitingZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - afsluiting
+  /api/zaken/afsluiting/{id}/afwijzen:
+    post:
+      operationId: zaken_afsluiting_afwijzen_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakAfwijzenRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakAfwijzenRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakAfwijzenRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AfsluitingZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - afsluiting
+  /api/zaken/afsluiting/{id}/annuleren:
+    post:
+      operationId: zaken_afsluiting_annuleren_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakAnnulerenRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakAnnulerenRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakAnnulerenRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AfsluitingZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - afsluiting
+  /api/zaken/afsluiting/{id}/bevestigen:
+    post:
+      operationId: zaken_afsluiting_bevestigen_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakBevestigenRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakBevestigenRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakBevestigenRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AfsluitingZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - afsluiting
+  /api/zaken/afsluiting/{id}/goedkeuren:
+    post:
+      operationId: zaken_afsluiting_goedkeuren_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakGoedkeurenRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakGoedkeurenRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakGoedkeurenRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AfsluitingZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - afsluiting
+  /api/zaken/afsluiting/{id}/uitvoeren:
+    post:
+      operationId: zaken_afsluiting_uitvoeren_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakUitvoerenRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakUitvoerenRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakUitvoerenRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AfsluitingZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - afsluiting
+  /api/zaken/afsluiting/indienen:
+    post:
+      operationId: zaken_afsluiting_indienen_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AfsluitingZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - afsluiting
+  /api/zaken/kiezer-vervangen/:
+    get:
+      operationId: zaken_kiezer_vervangen_list
+      parameters:
+      - explode: true
+        in: query
+        name: gesloten
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: nieuw = Nieuw, ingediend = Ingediend [ATSP], ingepland = Live
+          test ingepland [ATSP], goedgekeurd = Goedgekeurd [AMS-Servicedesk], doorgevoerd
+          = Doorgevoerd [GMS], geannuleerd = Geannuleerd
+        explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          enum:
+          - doorgevoerd
+          - geannuleerd
+          - goedgekeurd
+          - ingediend
+          - ingepland
+          - nieuw
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedKiezerVervangenZaakList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - kiezer vervangen
+  /api/zaken/kiezer-vervangen/{aansluitnummer}/indienen:
+    post:
+      operationId: zaken_kiezer_vervangen_indienen_create
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KiezerVervangenZaakIndienenRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/KiezerVervangenZaakIndienenRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/KiezerVervangenZaakIndienenRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KiezerVervangenZaakIndienen'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - kiezer vervangen
+  /api/zaken/kiezer-vervangen/{id}:
+    get:
+      operationId: zaken_kiezer_vervangen_retrieve
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KiezerVervangenZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - kiezer vervangen
+  /api/zaken/kiezer-vervangen/{id}/annuleren:
+    post:
+      operationId: zaken_kiezer_vervangen_annuleren_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KiezerVervangenZaakRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/KiezerVervangenZaakRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/KiezerVervangenZaakRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KiezerVervangenZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - kiezer vervangen
+  /api/zaken/kiezer-vervangen/{id}/goedkeuren:
+    post:
+      operationId: zaken_kiezer_vervangen_goedkeuren_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KiezerVervangenZaakRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/KiezerVervangenZaakRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/KiezerVervangenZaakRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KiezerVervangenZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - kiezer vervangen
+  /api/zaken/kiezer-vervangen/{id}/inplannen:
+    post:
+      operationId: zaken_kiezer_vervangen_inplannen_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KiezerVervangenZaakInplannenRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/KiezerVervangenZaakInplannenRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/KiezerVervangenZaakInplannenRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KiezerVervangenZaakInplannen'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - kiezer vervangen
+  /api/zaken/migratie/:
+    get:
+      description: Een migratie zaak wordt automatisch gestart bij het uitvoeren van
+        een migratie
+      operationId: zaken_migratie_list
+      parameters:
+      - explode: true
+        in: query
+        name: gesloten
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: nieuw = Nieuw, ingediend = Ingediend [ATSP], ingepland = Live
+          test ingepland [ATSP], gms_doorgevoerd = Doorgevoerd [GMS], goedgekeurd
+          = Goedgekeurd [AMS-Servicedesk], geannuleerd = Geannuleerd, gms_verwijderd
+          = Latende aansluiting verwijderd [GMS]
+        explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          enum:
+          - geannuleerd
+          - gms_doorgevoerd
+          - gms_verwijderd
+          - goedgekeurd
+          - ingediend
+          - ingepland
+          - nieuw
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMigratieZaakList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - migratie
+  /api/zaken/migratie/{aansluitnummer}/indienen:
+    post:
+      description: Het is mogelijk om een bestaande aansluiting over te nemen van
+        een andere ATSP. Ter verificatie vragen wij om straat + huisnummer (zonder
+        toevoegingen)
+      operationId: zaken_migratie_indienen_create
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MigratieRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MigratieRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MigratieRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Aansluiting'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - migratie
+  /api/zaken/migratie/{id}:
+    get:
+      operationId: zaken_migratie_retrieve
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MigratieZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - migratie
+  /api/zaken/migratie/{id}/annuleren:
+    post:
+      operationId: zaken_migratie_annuleren_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MigratieZaakXRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MigratieZaakXRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MigratieZaakXRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MigratieZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - migratie
+  /api/zaken/migratie/{id}/goedkeuren:
+    post:
+      operationId: zaken_migratie_goedkeuren_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MigratieZaakXRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MigratieZaakXRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MigratieZaakXRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MigratieZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - migratie
+  /api/zaken/migratie/{id}/inplannen:
+    post:
+      operationId: zaken_migratie_inplannen_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MigratieZaakLiveTestInplannenRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MigratieZaakLiveTestInplannenRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MigratieZaakLiveTestInplannenRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MigratieZaakLiveTestInplannen'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - migratie
+  /api/zaken/mutatie/:
+    get:
+      operationId: zaken_mutatie_list
+      parameters:
+      - explode: true
+        in: query
+        name: gesloten
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: mutatie = Mutatie, ingediend = Ingediend [ATSP], afgewezen =
+          Afgewezen [Risicobeheer], goedgekeurd = Goedgekeurd [Risicobeheer], aangepast_broker
+          = Aangepast in de Broker [ATSP], gms_toegevoegd = Toevoegingen doorgevoerd
+          in het GMS [GMS], ingepland = Live test ingepland [ATSP], aanpassingen_geverifieerd
+          = Live test goedgekeurd [AMS-Servicedesk], gms_verwijderd = Criteria verwijderd
+          in het GMS [AMS-Servicedesk], geannuleerd = Geannuleerd
+        explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          enum:
+          - aangepast_broker
+          - aanpassingen_geverifieerd
+          - afgewezen
+          - geannuleerd
+          - gms_toegevoegd
+          - gms_verwijderd
+          - goedgekeurd
+          - ingediend
+          - ingepland
+          - mutatie
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: type
+        required: false
+        schema:
+          enum:
+          - administratief
+          - technisch
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMutatieZaakList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - mutatie
+  /api/zaken/mutatie/{id}:
+    get:
+      operationId: zaken_mutatie_retrieve
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MutatieZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - mutatie
+  /api/zaken/mutatie/{id}/aangepast_broker:
+    post:
+      operationId: zaken_mutatie_aangepast_broker_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakGoedkeurenRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakGoedkeurenRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakGoedkeurenRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MutatieZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - mutatie
+  /api/zaken/mutatie/{id}/accorderen:
+    post:
+      operationId: zaken_mutatie_accorderen_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakGoedkeurenRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakGoedkeurenRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakGoedkeurenRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MutatieZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - mutatie
+  /api/zaken/mutatie/{id}/afwijzen:
+    post:
+      operationId: zaken_mutatie_afwijzen_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakGoedkeurenRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakGoedkeurenRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakGoedkeurenRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MutatieZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - mutatie
+  /api/zaken/mutatie/{id}/annuleren:
+    post:
+      operationId: zaken_mutatie_annuleren_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakGoedkeurenRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakGoedkeurenRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakGoedkeurenRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MutatieZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - mutatie
+  /api/zaken/mutatie/{id}/goedkeuren:
+    post:
+      operationId: zaken_mutatie_goedkeuren_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakGoedkeurenRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakGoedkeurenRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakGoedkeurenRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MutatieZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - mutatie
+  /api/zaken/mutatie/{id}/inplannen:
+    post:
+      operationId: zaken_mutatie_inplannen_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakAangepastInDeBrokerRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakAangepastInDeBrokerRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakAangepastInDeBrokerRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MutatieZaakAangepastInDeBroker'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - mutatie
+  /api/zaken/mutatie/{id}/technisch-gereed:
+    post:
+      operationId: zaken_mutatie_technisch_gereed_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakAangepastInDeBrokerRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakAangepastInDeBrokerRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakAangepastInDeBrokerRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MutatieZaakAangepastInDeBroker'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - mutatie
+  /api/zaken/mutatie/indienen:
+    post:
+      operationId: zaken_mutatie_indienen_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MutatieZaakRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MutatieZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - mutatie
+  /api/zaken/nieuwe-aansluiting/:
+    get:
+      operationId: zaken_nieuwe_aansluiting_list
+      parameters:
+      - explode: true
+        in: query
+        name: gesloten
+        required: false
+        schema:
+          type: boolean
+        style: form
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: nieuw = Nieuw, ingediend = Ingediend ter aanvraag [ATSP], afgekeurd
+          = Aanvraag afgekeurd [Risicobeheer], realisatie = Aanvraag goedgekeurd [Risicobeheer],
+          gms_doorgevoerd = Doorgevoerd [GMS], technisch_gereed = Live test inplannen
+          [ATSP], goedgekeurd = Goedgekeurd [AMS-Servicedesk], opgeleverd = Actief
+          gezet [Risicobeheer], geannuleerd = Geannuleerd
+        explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          enum:
+          - afgekeurd
+          - geannuleerd
+          - gms_doorgevoerd
+          - goedgekeurd
+          - ingediend
+          - nieuw
+          - opgeleverd
+          - realisatie
+          - technisch_gereed
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedNieuweAansluitingZaakList'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - nieuwe aansluiting
+  /api/zaken/nieuwe-aansluiting/{id}:
+    get:
+      operationId: zaken_nieuwe_aansluiting_retrieve
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NieuweAansluitingZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - nieuwe aansluiting
+  /api/zaken/nieuwe-aansluiting/{id}/afkeuren:
+    post:
+      operationId: zaken_nieuwe_aansluiting_afkeuren_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakTransitieRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakTransitieRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakTransitieRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NieuweAansluitingZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - nieuwe aansluiting
+  /api/zaken/nieuwe-aansluiting/{id}/annuleren:
+    post:
+      operationId: zaken_nieuwe_aansluiting_annuleren_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakTransitieRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakTransitieRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakTransitieRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NieuweAansluitingZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - nieuwe aansluiting
+  /api/zaken/nieuwe-aansluiting/{id}/goedkeuren:
+    post:
+      operationId: zaken_nieuwe_aansluiting_goedkeuren_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NieuweAfsluitingZaakGoedkeurenRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NieuweAfsluitingZaakGoedkeurenRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NieuweAfsluitingZaakGoedkeurenRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NieuweAansluitingZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - nieuwe aansluiting
+  /api/zaken/nieuwe-aansluiting/{id}/indienen:
+    post:
+      operationId: zaken_nieuwe_aansluiting_indienen_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakTransitieRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakTransitieRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakTransitieRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NieuweAansluitingZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - nieuwe aansluiting
+  /api/zaken/nieuwe-aansluiting/{id}/inplannen:
+    post:
+      operationId: zaken_nieuwe_aansluiting_inplannen_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NieuweAansluitingZaakLiveTestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NieuweAansluitingZaakLiveTestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NieuweAansluitingZaakLiveTestRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NieuweAansluitingZaakLiveTest'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - nieuwe aansluiting
+  /api/zaken/nieuwe-aansluiting/{id}/opleveren:
+    post:
+      operationId: zaken_nieuwe_aansluiting_opleveren_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakTransitieRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakTransitieRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakTransitieRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NieuweAansluitingZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - nieuwe aansluiting
+  /api/zaken/nieuwe-aansluiting/{id}/realisatie_afronden:
+    post:
+      operationId: zaken_nieuwe_aansluiting_realisatie_afronden_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NieuweAansluitingZaakLiveTestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NieuweAansluitingZaakLiveTestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NieuweAansluitingZaakLiveTestRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NieuweAansluitingZaakLiveTest'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - nieuwe aansluiting
+  /api/zaken/nieuwe-aansluiting/{id}/realisatie_goedkeuren:
+    post:
+      operationId: zaken_nieuwe_aansluiting_realisatie_goedkeuren_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakTransitieRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakTransitieRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AfsluitingZaakTransitieRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NieuweAansluitingZaak'
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - nieuwe aansluiting
+  /schema.json:
+    get:
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      operationId: schema.json_retrieve
+      parameters:
+      - explode: true
+        in: query
+        name: lang
+        required: false
+        schema:
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/vnd.oai.openapi+json:
+              schema:
+                additionalProperties: {}
+                type: object
+            application/json:
+              schema:
+                additionalProperties: {}
+                type: object
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      - {}
+      tags:
+      - schema.json
+components:
+  schemas:
+    ATSP:
+      example:
+        code: code
+        id: 0
+        naam: naam
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        naam:
+          maxLength: 255
+          type: string
+        code:
+          maxLength: 2
+          nullable: true
+          type: string
+      required:
+      - id
+      - naam
+      type: object
+    Aansluiting:
+      example:
+        bron: ""
+        aansluitnummer: aansluitnummer
+        bag_lookup_id: bag_lookup_id
+        plaats: plaats
+        created: 2000-01-23T04:56:07.000+00:00
+        huisletter: huisletter
+        postcode: postcode
+        naam: naam
+        toestand: ""
+        toevoeging: toevoeging
+        bag_id: bag_id
+        gebruiksfunctie: ""
+        straat: straat
+        huisnummer: huisnummer
+        bag_comment: bag_comment
+        modified: 2000-01-23T04:56:07.000+00:00
+        bijzonderheden: bijzonderheden
+        rijksdriehoekstel_x: rijksdriehoekstel_x
+        id: 0
+        bag_niet_beschikbaar: true
+        atsp: 6
+        gemeente: 1
+        rijksdriehoekstel_y: rijksdriehoekstel_y
+        status: ""
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        naam:
+          maxLength: 255
+          type: string
+        aansluitnummer:
+          maxLength: 8
+          minLength: 8
+          type: string
+        status:
+          allOf:
+          - $ref: '#/components/schemas/AansluitingStatusEnum'
+          description: 0 = Nieuw, 10 = Ingediend ter aanvraag [ATSP], 20 = Aanvraag
+            afgekeurd [Risicobeheer], 30 = Aanvraag goedgekeurd [Risicobeheer], 50
+            = Live test ingepland [ATSP], 55 = Goedgekeurd [AMS-servicedesk], 60 =
+            Actief gezet [Risicobeheer], 5 = Migratie gestart [ATSP], 61 = Migratie
+            goedgekeurd [AMS-Servicedesk]
+          readOnly: true
+          title: Status van de aanvraag
+        atsp:
+          type: integer
+        gemeente:
+          nullable: true
+          type: integer
+        straat:
+          maxLength: 255
+          type: string
+        huisnummer:
+          maxLength: 22
+          type: string
+        huisletter:
+          maxLength: 22
+          type: string
+        toevoeging:
+          maxLength: 22
+          type: string
+        postcode:
+          maxLength: 7
+          type: string
+        plaats:
+          maxLength: 255
+          type: string
+        created:
+          format: date-time
+          readOnly: true
+          title: Toegevoegd
+          type: string
+        modified:
+          format: date-time
+          readOnly: true
+          type: string
+        toestand:
+          allOf:
+          - $ref: '#/components/schemas/MeldingStatus'
+          description: 0 = Passief, 1 = Actief
+          readOnly: true
+        bag_lookup_id:
+          maxLength: 100
+          type: string
+        bag_id:
+          readOnly: true
+          type: string
+        bag_niet_beschikbaar:
+          nullable: true
+          title: Adres komt niet voor in de BAG
+          type: boolean
+        bag_comment:
+          title: Mogelijke oorzaak ontbreken BAG
+          type: string
+        rijksdriehoekstel_x:
+          description: https://www.kadaster.nl/zakelijk/registraties/basisregistraties/rijksdriehoeksmeting/rijksdriehoeksstelsel
+          format: decimal
+          nullable: true
+          pattern: ^\d{0,6}(?:\.\d{0,16})?$
+          title: X (RD-coördinaten)
+          type: string
+        rijksdriehoekstel_y:
+          description: https://www.kadaster.nl/zakelijk/registraties/basisregistraties/rijksdriehoeksmeting/rijksdriehoeksstelsel
+          format: decimal
+          nullable: true
+          pattern: ^\d{0,6}(?:\.\d{0,16})?$
+          title: Y (RD-coördinaten)
+          type: string
+        gebruiksfunctie:
+          allOf:
+          - $ref: '#/components/schemas/GebruiksfunctieEnum'
+          nullable: true
+        bijzonderheden:
+          nullable: true
+          type: string
+        bron:
+          allOf:
+          - $ref: '#/components/schemas/BronEnum'
+          readOnly: true
+      required:
+      - aansluitnummer
+      - atsp
+      - bag_id
+      - bron
+      - created
+      - id
+      - modified
+      - naam
+      - status
+      - toestand
+      type: object
+    AansluitingBestand:
+      example:
+        omschrijving: omschrijving
+        file: https://openapi-generator.tech
+        created: 2000-01-23T04:56:07.000+00:00
+        modified: 2000-01-23T04:56:07.000+00:00
+        id: 0
+        naam: naam
+        type: ""
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        naam:
+          maxLength: 255
+          type: string
+        omschrijving:
+          nullable: true
+          title: Opmerking
+          type: string
+        type:
+          allOf:
+          - $ref: '#/components/schemas/AansluitingBestandTypeEnum'
+          description: overige = Overige, pve = PVE, upd = UPD, nva = NVA (nota van
+            aanvulling), nvw = NVW (nota van wijzigingen), gms_mutatierapport = GMS
+            mutatierapport
+        file:
+          format: uri
+          nullable: true
+          title: Bestand
+          type: string
+        created:
+          format: date-time
+          readOnly: true
+          title: Toegevoegd
+          type: string
+        modified:
+          format: date-time
+          readOnly: true
+          type: string
+      required:
+      - created
+      - id
+      - modified
+      type: object
+    AansluitingBestandRequest:
+      example:
+        omschrijving: omschrijving
+        file: ""
+        naam: naam
+        type: ""
+      properties:
+        naam:
+          maxLength: 255
+          type: string
+        omschrijving:
+          nullable: true
+          title: Opmerking
+          type: string
+        type:
+          allOf:
+          - $ref: '#/components/schemas/AansluitingBestandTypeEnum'
+          description: overige = Overige, pve = PVE, upd = UPD, nva = NVA (nota van
+            aanvulling), nvw = NVW (nota van wijzigingen), gms_mutatierapport = GMS
+            mutatierapport
+        file:
+          format: binary
+          nullable: true
+          title: Bestand
+          type: string
+      type: object
+    AansluitingBestandTypeEnum:
+      enum:
+      - overige
+      - pve
+      - upd
+      - nva
+      - nvw
+      - gms_mutatierapport
+      type: string
+    AansluitingRequest:
+      example:
+        aansluitnummer: aansluitnummer
+        bag_lookup_id: bag_lookup_id
+        plaats: plaats
+        huisletter: huisletter
+        postcode: postcode
+        naam: naam
+        toevoeging: toevoeging
+        gebruiksfunctie: ""
+        straat: straat
+        huisnummer: huisnummer
+        bag_comment: bag_comment
+        bijzonderheden: bijzonderheden
+        rijksdriehoekstel_x: rijksdriehoekstel_x
+        bag_niet_beschikbaar: true
+        atsp: 0
+        gemeente: 6
+        rijksdriehoekstel_y: rijksdriehoekstel_y
+      properties:
+        naam:
+          maxLength: 255
+          minLength: 1
+          type: string
+        aansluitnummer:
+          maxLength: 8
+          minLength: 8
+          type: string
+        atsp:
+          type: integer
+        gemeente:
+          nullable: true
+          type: integer
+        straat:
+          maxLength: 255
+          type: string
+        huisnummer:
+          maxLength: 22
+          type: string
+        huisletter:
+          maxLength: 22
+          type: string
+        toevoeging:
+          maxLength: 22
+          type: string
+        postcode:
+          maxLength: 7
+          type: string
+        plaats:
+          maxLength: 255
+          type: string
+        bag_lookup_id:
+          maxLength: 100
+          type: string
+        bag_niet_beschikbaar:
+          nullable: true
+          title: Adres komt niet voor in de BAG
+          type: boolean
+        bag_comment:
+          title: Mogelijke oorzaak ontbreken BAG
+          type: string
+        rijksdriehoekstel_x:
+          description: https://www.kadaster.nl/zakelijk/registraties/basisregistraties/rijksdriehoeksmeting/rijksdriehoeksstelsel
+          format: decimal
+          nullable: true
+          pattern: ^\d{0,6}(?:\.\d{0,16})?$
+          title: X (RD-coördinaten)
+          type: string
+        rijksdriehoekstel_y:
+          description: https://www.kadaster.nl/zakelijk/registraties/basisregistraties/rijksdriehoeksmeting/rijksdriehoeksstelsel
+          format: decimal
+          nullable: true
+          pattern: ^\d{0,6}(?:\.\d{0,16})?$
+          title: Y (RD-coördinaten)
+          type: string
+        gebruiksfunctie:
+          allOf:
+          - $ref: '#/components/schemas/GebruiksfunctieEnum'
+          nullable: true
+        bijzonderheden:
+          nullable: true
+          type: string
+      required:
+      - aansluitnummer
+      - atsp
+      - naam
+      type: object
+    AansluitingStatusEnum:
+      enum:
+      - 0
+      - 10
+      - 20
+      - 30
+      - 50
+      - 55
+      - 60
+      - 5
+      - 61
+      type: integer
+    AansluitingToestand:
+      example:
+        toestand: ""
+      properties:
+        toestand:
+          allOf:
+          - $ref: '#/components/schemas/MeldingStatus'
+          description: 0 = Passief, 1 = Actief
+          maximum: 2147483647
+          minimum: -2147483648
+      type: object
+    AanwezigCriterium:
+      example:
+        laatst_gemeld: 2000-01-23T04:56:07.000+00:00
+        criterium: 1
+        id: 0
+        sector: 6
+        laatste_toestand: ""
+        laatste_status: ""
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        sector:
+          readOnly: true
+          type: integer
+        criterium:
+          type: integer
+        laatst_gemeld:
+          format: date-time
+          readOnly: true
+          type: string
+        laatste_toestand:
+          allOf:
+          - $ref: '#/components/schemas/MeldingToestand'
+          readOnly: true
+        laatste_status:
+          allOf:
+          - $ref: '#/components/schemas/MeldingStatus'
+          readOnly: true
+      required:
+      - criterium
+      - id
+      - laatst_gemeld
+      - laatste_status
+      - laatste_toestand
+      - sector
+      type: object
+    AanwezigCriteriumRequest:
+      example:
+        criterium: 0
+      properties:
+        criterium:
+          type: integer
+      required:
+      - criterium
+      type: object
+    AfsluitingZaak:
+      example:
+        created: 2000-01-23T04:56:07.000+00:00
+        gesloten_door: 5
+        geplande_datum: 2000-01-23
+        mogelijke_transities:
+        - mogelijke_transities
+        - mogelijke_transities
+        reden: reden
+        definitieve_datum: 2000-01-23
+        gesloten: true
+        reden_van_afwijzing: reden_van_afwijzing
+        aansluiting: 6
+        modified: 2000-01-23T04:56:07.000+00:00
+        id: 0
+        status_changed: 2000-01-23T04:56:07.000+00:00
+        user: 1
+        status: ""
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        aansluiting:
+          type: integer
+        status:
+          allOf:
+          - $ref: '#/components/schemas/AfsluitingZaakStatusEnum'
+          description: nieuw = Afsluiting, ingediend = Ingediend [ATSP], afgewezen
+            = Afgewezen [Risicobeheer], goedgekeurd = Goedgekeurd [Risicobeheer],
+            bevestigd = Bevestigd [ATSP], uitgevoerd = Uitgevoerd [AMS-Servicedesk],
+            geannuleerd = Geannuleerd
+          readOnly: true
+        status_changed:
+          format: date-time
+          readOnly: true
+          title: Status aangepast op
+          type: string
+        created:
+          format: date-time
+          readOnly: true
+          title: Aangemaakt
+          type: string
+        modified:
+          format: date-time
+          readOnly: true
+          title: Laatst aangepast
+          type: string
+        user:
+          readOnly: true
+          type: integer
+        gesloten:
+          readOnly: true
+          type: boolean
+        gesloten_door:
+          readOnly: true
+          type: integer
+        reden:
+          type: string
+        reden_van_afwijzing:
+          nullable: true
+          title: Reden
+          type: string
+        geplande_datum:
+          description: Voor wanneer staat de afsluiting gepland?
+          format: date
+          type: string
+        definitieve_datum:
+          description: Wanneer wordt de aansluiting definitief verwijderd?
+          format: date
+          readOnly: true
+          type: string
+        mogelijke_transities:
+          items:
+            type: string
+          readOnly: true
+          type: array
+      required:
+      - aansluiting
+      - created
+      - definitieve_datum
+      - geplande_datum
+      - gesloten
+      - gesloten_door
+      - id
+      - modified
+      - mogelijke_transities
+      - reden
+      - status
+      - status_changed
+      - user
+      type: object
+    AfsluitingZaakAfwijzenRequest:
+      example:
+        reden_van_afwijzing: reden_van_afwijzing
+      properties:
+        reden_van_afwijzing:
+          minLength: 1
+          nullable: true
+          title: Reden
+          type: string
+      type: object
+    AfsluitingZaakAnnulerenRequest:
+      example:
+        description: description
+      properties:
+        description:
+          minLength: 1
+          type: string
+      required:
+      - description
+      type: object
+    AfsluitingZaakBevestigenRequest:
+      example:
+        description: description
+      properties:
+        description:
+          minLength: 1
+          type: string
+      required:
+      - description
+      type: object
+    AfsluitingZaakGoedkeurenRequest:
+      example:
+        definitieve_datum: 2000-01-23
+        description: description
+      properties:
+        description:
+          minLength: 1
+          type: string
+        definitieve_datum:
+          description: Wanneer wordt de aansluiting definitief verwijderd?
+          format: date
+          nullable: true
+          type: string
+      required:
+      - description
+      type: object
+    AfsluitingZaakRequest:
+      example:
+        reden_van_afwijzing: reden_van_afwijzing
+        aansluiting: 0
+        geplande_datum: 2000-01-23
+        reden: reden
+      properties:
+        aansluiting:
+          type: integer
+        reden:
+          minLength: 1
+          type: string
+        reden_van_afwijzing:
+          minLength: 1
+          nullable: true
+          title: Reden
+          type: string
+        geplande_datum:
+          description: Voor wanneer staat de afsluiting gepland?
+          format: date
+          type: string
+      required:
+      - aansluiting
+      - geplande_datum
+      - reden
+      type: object
+    AfsluitingZaakStatusEnum:
+      enum:
+      - nieuw
+      - ingediend
+      - afgewezen
+      - goedgekeurd
+      - bevestigd
+      - uitgevoerd
+      - geannuleerd
+      type: string
+    AfsluitingZaakTransitieRequest:
+      example:
+        description: description
+      properties:
+        description:
+          minLength: 1
+          type: string
+      required:
+      - description
+      type: object
+    AfsluitingZaakUitvoerenRequest:
+      example:
+        description: description
+      properties:
+        description:
+          minLength: 1
+          type: string
+      required:
+      - description
+      type: object
+    Afspraak:
+      example:
+        titel: titel
+        start_tijd: 2000-01-23T04:56:07.000+00:00
+        start: 2000-01-23T04:56:07.000+00:00
+        aansluiting: 6
+        eind_tijd: 2000-01-23T04:56:07.000+00:00
+        end: 2000-01-23T04:56:07.000+00:00
+        id: 0
+        title: title
+        url: https://openapi-generator.tech
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        start_tijd:
+          format: date-time
+          type: string
+        eind_tijd:
+          format: date-time
+          type: string
+        titel:
+          maxLength: 255
+          title: Title
+          type: string
+        title:
+          readOnly: true
+          type: string
+        start:
+          format: date-time
+          readOnly: true
+          type: string
+        end:
+          format: date-time
+          readOnly: true
+          type: string
+        url:
+          format: uri
+          readOnly: true
+          type: string
+        aansluiting:
+          nullable: true
+          type: integer
+      required:
+      - end
+      - id
+      - start
+      - start_tijd
+      - titel
+      - title
+      - url
+      type: object
+    AfspraakRequest:
+      example:
+        titel: titel
+        start_tijd: 2000-01-23T04:56:07.000+00:00
+        aansluiting: 0
+        eind_tijd: 2000-01-23T04:56:07.000+00:00
+      properties:
+        start_tijd:
+          format: date-time
+          type: string
+        eind_tijd:
+          format: date-time
+          type: string
+        titel:
+          maxLength: 255
+          minLength: 1
+          title: Title
+          type: string
+        aansluiting:
+          nullable: true
+          type: integer
+      required:
+      - start_tijd
+      - titel
+      type: object
+    AfspraakVerplaatsen:
+      example:
+        afspraak_tijd: 2000-01-23T04:56:07.000+00:00
+      properties:
+        afspraak_tijd:
+          format: date-time
+          type: string
+      type: object
+    AfspraakVerplaatsenRequest:
+      example:
+        afspraak_tijd: 2000-01-23T04:56:07.000+00:00
+      properties:
+        afspraak_tijd:
+          format: date-time
+          type: string
+      type: object
+    BookableTimes:
+      example:
+        date: 2000-01-23
+        start_time: start_time
+        end_time: end_time
+        timestamp: 0
+      properties:
+        date:
+          format: date
+          type: string
+        start_time:
+          format: time
+          type: string
+        end_time:
+          format: time
+          type: string
+        timestamp:
+          type: integer
+      required:
+      - date
+      - end_time
+      - start_time
+      - timestamp
+      type: object
+    Bookabledays:
+      example:
+        days:
+        - 2000-01-23
+        - 2000-01-23
+      properties:
+        days:
+          items:
+            format: date
+            type: string
+          type: array
+      required:
+      - days
+      type: object
+    BronEnum:
+      enum:
+      - import
+      - nieuw
+      - migratie
+      - api
+      type: string
+    ContactPersoon:
+      example:
+        achternaam: achternaam
+        is_technisch_contact: true
+        tussenvoegsel: tussenvoegsel
+        created: 2000-01-23T04:56:07.000+00:00
+        telefoonnummers:
+        - omschrijving: omschrijving
+          telefoonnummer: telefoonnummer
+          id: 1
+        - omschrijving: omschrijving
+          telefoonnummer: telefoonnummer
+          id: 1
+        aansluiting: 6
+        voornaam: voornaam
+        modified: 2000-01-23T04:56:07.000+00:00
+        id: 0
+        email: email
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        aansluiting:
+          readOnly: true
+          type: integer
+        voornaam:
+          maxLength: 255
+          type: string
+        tussenvoegsel:
+          maxLength: 255
+          nullable: true
+          type: string
+        achternaam:
+          maxLength: 255
+          type: string
+        is_technisch_contact:
+          title: Technisch contact
+          type: boolean
+        telefoonnummers:
+          items:
+            $ref: '#/components/schemas/Telefoonnummer'
+          readOnly: true
+          type: array
+        email:
+          description: contactpersoon t.b.v. informatie voor de repressieve dienst
+            (verplicht voor een technisch contact)
+          format: email
+          maxLength: 254
+          nullable: true
+          title: E-mailadres
+          type: string
+        created:
+          format: date-time
+          readOnly: true
+          title: Toegevoegd
+          type: string
+        modified:
+          format: date-time
+          readOnly: true
+          type: string
+      required:
+      - aansluiting
+      - achternaam
+      - created
+      - id
+      - modified
+      - telefoonnummers
+      - voornaam
+      type: object
+    ContactPersoonRequest:
+      example:
+        achternaam: achternaam
+        is_technisch_contact: true
+        tussenvoegsel: tussenvoegsel
+        voornaam: voornaam
+        email: email
+      properties:
+        voornaam:
+          maxLength: 255
+          minLength: 1
+          type: string
+        tussenvoegsel:
+          maxLength: 255
+          nullable: true
+          type: string
+        achternaam:
+          maxLength: 255
+          minLength: 1
+          type: string
+        is_technisch_contact:
+          title: Technisch contact
+          type: boolean
+        email:
+          description: contactpersoon t.b.v. informatie voor de repressieve dienst
+            (verplicht voor een technisch contact)
+          format: email
+          maxLength: 254
+          nullable: true
+          title: E-mailadres
+          type: string
+      required:
+      - achternaam
+      - voornaam
+      type: object
+    Criterium:
+      example:
+        description: description
+        id: 0
+        naam: 441289069
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        naam:
+          maximum: 2147483647
+          minimum: -2147483648
+          type: integer
+        description:
+          nullable: true
+          type: string
+      required:
+      - id
+      - naam
+      type: object
+    GebruiksfunctieEnum:
+      enum:
+      - Gezondheidszorgfunctie met bedgebied
+      - Groepszorgwoning voor 24-uurs zorg
+      - Logiesgebouw zonder 24-uursbewaking met vloerhoogte > 1,5 m1
+      - Zorgclusterwoning voor 24-uurs zorg in een woongebouw
+      - Kinderopvang voor kinderen < 4 jaar met vloerhoogte > 1,5 m1 (6 bedjes)
+      - Celfunctie
+      - Gelijkwaardige veiligheid (BHVB) doormelden via PAC mogelijk
+      - Gelijkwaardige veiligheid (sprinkler) doormelden via PAC mogelijk
+      - Andere wetgeving (bv. Milieu- of archiefwetgeving)
+      - O.b.v. lokale bestuurlijke afspraken/wensen
+      - O.b.v. lokale leiding brandweerzorg
+      type: string
+    Gemeente:
+      example:
+        id: 0
+        naam: naam
+        regio: 6
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        naam:
+          maxLength: 50
+          type: string
+        regio:
+          type: integer
+      required:
+      - id
+      - naam
+      - regio
+      type: object
+    KiezerVervangenZaak:
+      example:
+        description: description
+      properties:
+        description:
+          type: string
+      required:
+      - description
+      type: object
+    KiezerVervangenZaakIndienen:
+      example:
+        gesloten: true
+        created: 2000-01-23T04:56:07.000+00:00
+        gesloten_door: 5
+        aansluiting: 6
+        modified: 2000-01-23T04:56:07.000+00:00
+        id: 0
+        mogelijke_transities:
+        - mogelijke_transities
+        - mogelijke_transities
+        status_changed: 2000-01-23T04:56:07.000+00:00
+        user: 1
+        status: ""
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        aansluiting:
+          type: integer
+        status:
+          allOf:
+          - $ref: '#/components/schemas/KiezerVervangenZaakIndienenStatusEnum'
+          description: nieuw = Nieuw, ingediend = Ingediend [ATSP], ingepland = Live
+            test ingepland [ATSP], goedgekeurd = Goedgekeurd [AMS-Servicedesk], doorgevoerd
+            = Doorgevoerd [GMS], geannuleerd = Geannuleerd
+          readOnly: true
+        status_changed:
+          format: date-time
+          readOnly: true
+          title: Status aangepast op
+          type: string
+        created:
+          format: date-time
+          readOnly: true
+          title: Aangemaakt
+          type: string
+        modified:
+          format: date-time
+          readOnly: true
+          title: Laatst aangepast
+          type: string
+        user:
+          readOnly: true
+          type: integer
+        gesloten:
+          readOnly: true
+          type: boolean
+        gesloten_door:
+          readOnly: true
+          type: integer
+        mogelijke_transities:
+          items:
+            type: string
+          readOnly: true
+          type: array
+      required:
+      - aansluiting
+      - created
+      - gesloten
+      - gesloten_door
+      - id
+      - modified
+      - mogelijke_transities
+      - status
+      - status_changed
+      - user
+      type: object
+    KiezerVervangenZaakIndienenRequest:
+      example:
+        aansluiting: 0
+      properties:
+        aansluiting:
+          type: integer
+      required:
+      - aansluiting
+      type: object
+    KiezerVervangenZaakIndienenStatusEnum:
+      enum:
+      - nieuw
+      - ingediend
+      - ingepland
+      - goedgekeurd
+      - doorgevoerd
+      - geannuleerd
+      type: string
+    KiezerVervangenZaakInplannen:
+      example:
+        description: description
+        afspraak_tijd: 2000-01-23T04:56:07.000+00:00
+      properties:
+        description:
+          type: string
+        afspraak_tijd:
+          format: date-time
+          type: string
+      type: object
+    KiezerVervangenZaakInplannenRequest:
+      example:
+        description: description
+        afspraak_tijd: 2000-01-23T04:56:07.000+00:00
+      properties:
+        description:
+          type: string
+        afspraak_tijd:
+          format: date-time
+          type: string
+      type: object
+    KiezerVervangenZaakRequest:
+      example:
+        description: description
+      properties:
+        description:
+          minLength: 1
+          type: string
+      required:
+      - description
+      type: object
+    Melding:
+      example:
+        aansluitnummer: aansluitnummer
+        data: data
+        toestand: ""
+        actueel: true
+        gms_id: gms_id
+        melding_id: melding_id
+        criterium: 6
+        tijd: 2000-01-23T04:56:07.000+00:00
+        id: 0
+        prio: ""
+        sector: 1
+        oorzaak: oorzaak
+        status: ""
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        criterium:
+          description: The naam field of the Criterium
+          type: integer
+        tijd:
+          format: date-time
+          type: string
+        aansluitnummer:
+          readOnly: true
+          type: string
+        sector:
+          description: Reference to the number of the sector
+          nullable: true
+          type: integer
+        status:
+          allOf:
+          - $ref: '#/components/schemas/MeldingStatus'
+          description: 0 = Rust, 1 = Alarm
+          maximum: 2147483647
+          minimum: -2147483648
+        toestand:
+          allOf:
+          - $ref: '#/components/schemas/MeldingToestand'
+          description: 0 = Actief, 1 = test, 2 = Passief
+          maximum: 2147483647
+          minimum: -2147483648
+        data:
+          title: Gegevens
+          type: string
+        actueel:
+          type: boolean
+        gms_id:
+          maxLength: 255
+          nullable: true
+          type: string
+        oorzaak:
+          nullable: true
+          type: string
+        melding_id:
+          maxLength: 255
+          nullable: true
+          type: string
+        prio:
+          allOf:
+          - $ref: '#/components/schemas/PrioEnum'
+          maximum: 2147483647
+          minimum: -2147483648
+      required:
+      - aansluitnummer
+      - criterium
+      - id
+      - tijd
+      - toestand
+      type: object
+    MeldingRequest:
+      example:
+        fep_nr: 1
+        data: data
+        volg_nr: 5
+        toestand: ""
+        actueel: true
+        gms_id: gms_id
+        melding_id: melding_id
+        criterium: 0
+        tijd: 2000-01-23T04:56:07.000+00:00
+        prio: ""
+        sector: 6
+        oorzaak: oorzaak
+        status: ""
+      properties:
+        criterium:
+          description: The naam field of the Criterium
+          type: integer
+        tijd:
+          format: date-time
+          type: string
+        sector:
+          description: Reference to the number of the sector
+          nullable: true
+          type: integer
+        status:
+          allOf:
+          - $ref: '#/components/schemas/MeldingStatus'
+          description: 0 = Rust, 1 = Alarm
+          maximum: 2147483647
+          minimum: -2147483648
+        toestand:
+          allOf:
+          - $ref: '#/components/schemas/MeldingToestand'
+          description: 0 = Actief, 1 = test, 2 = Passief
+          maximum: 2147483647
+          minimum: -2147483648
+        data:
+          title: Gegevens
+          type: string
+        actueel:
+          type: boolean
+        gms_id:
+          maxLength: 255
+          nullable: true
+          type: string
+        oorzaak:
+          nullable: true
+          type: string
+        fep_nr:
+          type: integer
+          writeOnly: true
+        volg_nr:
+          type: integer
+          writeOnly: true
+        melding_id:
+          maxLength: 255
+          minLength: 1
+          nullable: true
+          type: string
+        prio:
+          allOf:
+          - $ref: '#/components/schemas/PrioEnum'
+          maximum: 2147483647
+          minimum: -2147483648
+      required:
+      - criterium
+      - fep_nr
+      - tijd
+      - toestand
+      - volg_nr
+      type: object
+    MeldingStatus:
+      enum:
+      - 0
+      - 1
+      type: integer
+    MeldingToestand:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+    Meldkamer:
+      example:
+        afkorting: afkorting
+        id: 0
+        naam: naam
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        naam:
+          maxLength: 255
+          type: string
+        afkorting:
+          maxLength: 255
+          nullable: true
+          type: string
+      required:
+      - id
+      - naam
+      type: object
+    MigratieRequest:
+      example:
+        straat: straat
+        huisnummer: huisnummer
+        memo: memo
+        nieuwe_aansluitnummer: nieuwe_aansluitnummer
+        atsp: 0
+      properties:
+        nieuwe_aansluitnummer:
+          maxLength: 8
+          minLength: 8
+          type: string
+        straat:
+          maxLength: 255
+          type: string
+        huisnummer:
+          maxLength: 22
+          type: string
+        atsp:
+          type: integer
+        memo:
+          minLength: 1
+          type: string
+      required:
+      - atsp
+      - nieuwe_aansluitnummer
+      type: object
+    MigratieZaak:
+      example:
+        gesloten: true
+        created: 2000-01-23T04:56:07.000+00:00
+        gesloten_door: 5
+        aansluiting: 6
+        modified: 2000-01-23T04:56:07.000+00:00
+        id: 0
+        mogelijke_transities:
+        - mogelijke_transities
+        - mogelijke_transities
+        status_changed: 2000-01-23T04:56:07.000+00:00
+        user: 1
+        status: ""
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        aansluiting:
+          type: integer
+        status:
+          allOf:
+          - $ref: '#/components/schemas/MigratieZaakStatusEnum'
+          description: nieuw = Nieuw, ingediend = Ingediend [ATSP], ingepland = Live
+            test ingepland [ATSP], gms_doorgevoerd = Doorgevoerd [GMS], goedgekeurd
+            = Goedgekeurd [AMS-Servicedesk], geannuleerd = Geannuleerd, gms_verwijderd
+            = Latende aansluiting verwijderd [GMS]
+          readOnly: true
+        status_changed:
+          format: date-time
+          readOnly: true
+          title: Status aangepast op
+          type: string
+        created:
+          format: date-time
+          readOnly: true
+          title: Aangemaakt
+          type: string
+        modified:
+          format: date-time
+          readOnly: true
+          title: Laatst aangepast
+          type: string
+        user:
+          readOnly: true
+          type: integer
+        gesloten:
+          readOnly: true
+          type: boolean
+        gesloten_door:
+          readOnly: true
+          type: integer
+        mogelijke_transities:
+          items:
+            type: string
+          readOnly: true
+          type: array
+      required:
+      - aansluiting
+      - created
+      - gesloten
+      - gesloten_door
+      - id
+      - modified
+      - mogelijke_transities
+      - status
+      - status_changed
+      - user
+      type: object
+    MigratieZaakLiveTestInplannen:
+      example:
+        description: description
+        afspraak_tijd: 2000-01-23T04:56:07.000+00:00
+      properties:
+        description:
+          type: string
+        afspraak_tijd:
+          format: date-time
+          type: string
+      type: object
+    MigratieZaakLiveTestInplannenRequest:
+      example:
+        description: description
+        afspraak_tijd: 2000-01-23T04:56:07.000+00:00
+      properties:
+        description:
+          type: string
+        afspraak_tijd:
+          format: date-time
+          type: string
+      type: object
+    MigratieZaakStatusEnum:
+      enum:
+      - nieuw
+      - ingediend
+      - ingepland
+      - gms_doorgevoerd
+      - goedgekeurd
+      - geannuleerd
+      - gms_verwijderd
+      type: string
+    MigratieZaakXRequest:
+      example:
+        description: description
+      properties:
+        description:
+          minLength: 1
+          type: string
+      required:
+      - description
+      type: object
+    MutatieZaak:
+      example:
+        created: 2000-01-23T04:56:07.000+00:00
+        gesloten_door: 5
+        mogelijke_transities:
+        - mogelijke_transities
+        - mogelijke_transities
+        reden: reden
+        bouwdelen_toevoegen: true
+        gesloten: true
+        omschrijving_van_wijziging: omschrijving_van_wijziging
+        aansluiting: 6
+        modified: 2000-01-23T04:56:07.000+00:00
+        id: 0
+        status_changed: 2000-01-23T04:56:07.000+00:00
+        user: 1
+        status: ""
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        aansluiting:
+          type: integer
+        status:
+          allOf:
+          - $ref: '#/components/schemas/MutatieZaakStatusEnum'
+          description: mutatie = Mutatie, ingediend = Ingediend [ATSP], afgewezen
+            = Afgewezen [Risicobeheer], goedgekeurd = Goedgekeurd [Risicobeheer],
+            aangepast_broker = Aangepast in de Broker [ATSP], gms_toegevoegd = Toevoegingen
+            doorgevoerd in het GMS [GMS], ingepland = Live test ingepland [ATSP],
+            aanpassingen_geverifieerd = Live test goedgekeurd [AMS-Servicedesk], gms_verwijderd
+            = Criteria verwijderd in het GMS [AMS-Servicedesk], geannuleerd = Geannuleerd
+          readOnly: true
+        status_changed:
+          format: date-time
+          readOnly: true
+          title: Status aangepast op
+          type: string
+        created:
+          format: date-time
+          readOnly: true
+          title: Aangemaakt
+          type: string
+        modified:
+          format: date-time
+          readOnly: true
+          title: Laatst aangepast
+          type: string
+        user:
+          readOnly: true
+          type: integer
+        gesloten:
+          readOnly: true
+          type: boolean
+        gesloten_door:
+          readOnly: true
+          type: integer
+        type:
+          $ref: '#/components/schemas/MutatieZaakTypeEnum'
+        reden:
+          nullable: true
+          title: Reden van mutatie
+          type: string
+        omschrijving_van_wijziging:
+          title: Omschrijf nauwkeurig welke wijzigingen nodig zijn
+          type: string
+        bouwdelen_toevoegen:
+          title: Ik wil nieuwe bouwdelen toevoegen
+          type: boolean
+        mogelijke_transities:
+          items:
+            type: string
+          readOnly: true
+          type: array
+      required:
+      - aansluiting
+      - created
+      - gesloten
+      - gesloten_door
+      - id
+      - modified
+      - mogelijke_transities
+      - omschrijving_van_wijziging
+      - status
+      - status_changed
+      - user
+      type: object
+    MutatieZaakAangepastInDeBroker:
+      example:
+        description: description
+        afspraak_tijd: 2000-01-23T04:56:07.000+00:00
+      properties:
+        description:
+          type: string
+        afspraak_tijd:
+          format: date-time
+          type: string
+      type: object
+    MutatieZaakAangepastInDeBrokerRequest:
+      example:
+        description: description
+        afspraak_tijd: 2000-01-23T04:56:07.000+00:00
+      properties:
+        description:
+          type: string
+        afspraak_tijd:
+          format: date-time
+          type: string
+      type: object
+    MutatieZaakGoedkeurenRequest:
+      example:
+        description: description
+      properties:
+        description:
+          type: string
+      type: object
+    MutatieZaakRequest:
+      example:
+        bouwdelen_toevoegen: true
+        omschrijving_van_wijziging: omschrijving_van_wijziging
+        aansluiting: 0
+        sectoren:
+        - 6
+        - 6
+        reden: reden
+      properties:
+        aansluiting:
+          type: integer
+        type:
+          $ref: '#/components/schemas/MutatieZaakTypeEnum'
+        reden:
+          minLength: 1
+          nullable: true
+          title: Reden van mutatie
+          type: string
+        omschrijving_van_wijziging:
+          minLength: 1
+          title: Omschrijf nauwkeurig welke wijzigingen nodig zijn
+          type: string
+        bouwdelen_toevoegen:
+          title: Ik wil nieuwe bouwdelen toevoegen
+          type: boolean
+        sectoren:
+          items:
+            type: integer
+            writeOnly: true
+          type: array
+          writeOnly: true
+      required:
+      - aansluiting
+      - omschrijving_van_wijziging
+      type: object
+    MutatieZaakStatusEnum:
+      enum:
+      - mutatie
+      - ingediend
+      - afgewezen
+      - goedgekeurd
+      - aangepast_broker
+      - gms_toegevoegd
+      - ingepland
+      - aanpassingen_geverifieerd
+      - gms_verwijderd
+      - geannuleerd
+      type: string
+    MutatieZaakTypeEnum:
+      enum:
+      - administratief
+      - technisch
+      type: string
+    NieuweAansluitingZaak:
+      example:
+        gesloten: true
+        created: 2000-01-23T04:56:07.000+00:00
+        gesloten_door: 5
+        aansluiting: 6
+        modified: 2000-01-23T04:56:07.000+00:00
+        id: 0
+        mogelijke_transities:
+        - mogelijke_transities
+        - mogelijke_transities
+        status_changed: 2000-01-23T04:56:07.000+00:00
+        user: 1
+        status: ""
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        aansluiting:
+          type: integer
+        status:
+          allOf:
+          - $ref: '#/components/schemas/NieuweAansluitingZaakStatusEnum'
+          description: nieuw = Nieuw, ingediend = Ingediend ter aanvraag [ATSP], afgekeurd
+            = Aanvraag afgekeurd [Risicobeheer], realisatie = Aanvraag goedgekeurd
+            [Risicobeheer], gms_doorgevoerd = Doorgevoerd [GMS], technisch_gereed
+            = Live test inplannen [ATSP], goedgekeurd = Goedgekeurd [AMS-Servicedesk],
+            opgeleverd = Actief gezet [Risicobeheer], geannuleerd = Geannuleerd
+          readOnly: true
+        status_changed:
+          format: date-time
+          readOnly: true
+          title: Status aangepast op
+          type: string
+        created:
+          format: date-time
+          readOnly: true
+          title: Aangemaakt
+          type: string
+        modified:
+          format: date-time
+          readOnly: true
+          title: Laatst aangepast
+          type: string
+        user:
+          readOnly: true
+          type: integer
+        gesloten:
+          readOnly: true
+          type: boolean
+        gesloten_door:
+          readOnly: true
+          type: integer
+        mogelijke_transities:
+          items:
+            type: string
+          readOnly: true
+          type: array
+      required:
+      - aansluiting
+      - created
+      - gesloten
+      - gesloten_door
+      - id
+      - modified
+      - mogelijke_transities
+      - status
+      - status_changed
+      - user
+      type: object
+    NieuweAansluitingZaakLiveTest:
+      example:
+        description: description
+        afspraak_tijd: 2000-01-23T04:56:07.000+00:00
+      properties:
+        description:
+          nullable: true
+          type: string
+        afspraak_tijd:
+          format: date-time
+          type: string
+      type: object
+    NieuweAansluitingZaakLiveTestRequest:
+      example:
+        description: description
+        afspraak_tijd: 2000-01-23T04:56:07.000+00:00
+      properties:
+        description:
+          nullable: true
+          type: string
+        afspraak_tijd:
+          format: date-time
+          type: string
+      type: object
+    NieuweAansluitingZaakStatusEnum:
+      enum:
+      - nieuw
+      - ingediend
+      - afgekeurd
+      - realisatie
+      - gms_doorgevoerd
+      - technisch_gereed
+      - goedgekeurd
+      - opgeleverd
+      - geannuleerd
+      type: string
+    NieuweAfsluitingZaakGoedkeurenRequest:
+      example:
+        description: description
+      properties:
+        description:
+          minLength: 1
+          type: string
+        gebruiksfunctie:
+          $ref: '#/components/schemas/GebruiksfunctieEnum'
+      required:
+      - description
+      - gebruiksfunctie
+      type: object
+    ObjectTypeEnum:
+      enum:
+      - aansluiting
+      - sector
+      type: string
+    PaginatedATSPList:
+      example:
+        next: http://api.example.org/accounts/?offset=400&limit=100
+        previous: http://api.example.org/accounts/?offset=200&limit=100
+        count: 123
+        results:
+        - code: code
+          id: 0
+          naam: naam
+        - code: code
+          id: 0
+          naam: naam
+      properties:
+        count:
+          example: 123
+          type: integer
+        next:
+          example: http://api.example.org/accounts/?offset=400&limit=100
+          format: uri
+          nullable: true
+          type: string
+        previous:
+          example: http://api.example.org/accounts/?offset=200&limit=100
+          format: uri
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/ATSP'
+          type: array
+      type: object
+    PaginatedAansluitingBestandList:
+      example:
+        next: http://api.example.org/accounts/?offset=400&limit=100
+        previous: http://api.example.org/accounts/?offset=200&limit=100
+        count: 123
+        results:
+        - omschrijving: omschrijving
+          file: https://openapi-generator.tech
+          created: 2000-01-23T04:56:07.000+00:00
+          modified: 2000-01-23T04:56:07.000+00:00
+          id: 0
+          naam: naam
+          type: ""
+        - omschrijving: omschrijving
+          file: https://openapi-generator.tech
+          created: 2000-01-23T04:56:07.000+00:00
+          modified: 2000-01-23T04:56:07.000+00:00
+          id: 0
+          naam: naam
+          type: ""
+      properties:
+        count:
+          example: 123
+          type: integer
+        next:
+          example: http://api.example.org/accounts/?offset=400&limit=100
+          format: uri
+          nullable: true
+          type: string
+        previous:
+          example: http://api.example.org/accounts/?offset=200&limit=100
+          format: uri
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/AansluitingBestand'
+          type: array
+      type: object
+    PaginatedAansluitingList:
+      example:
+        next: http://api.example.org/accounts/?offset=400&limit=100
+        previous: http://api.example.org/accounts/?offset=200&limit=100
+        count: 123
+        results:
+        - bron: ""
+          aansluitnummer: aansluitnummer
+          bag_lookup_id: bag_lookup_id
+          plaats: plaats
+          created: 2000-01-23T04:56:07.000+00:00
+          huisletter: huisletter
+          postcode: postcode
+          naam: naam
+          toestand: ""
+          toevoeging: toevoeging
+          bag_id: bag_id
+          gebruiksfunctie: ""
+          straat: straat
+          huisnummer: huisnummer
+          bag_comment: bag_comment
+          modified: 2000-01-23T04:56:07.000+00:00
+          bijzonderheden: bijzonderheden
+          rijksdriehoekstel_x: rijksdriehoekstel_x
+          id: 0
+          bag_niet_beschikbaar: true
+          atsp: 6
+          gemeente: 1
+          rijksdriehoekstel_y: rijksdriehoekstel_y
+          status: ""
+        - bron: ""
+          aansluitnummer: aansluitnummer
+          bag_lookup_id: bag_lookup_id
+          plaats: plaats
+          created: 2000-01-23T04:56:07.000+00:00
+          huisletter: huisletter
+          postcode: postcode
+          naam: naam
+          toestand: ""
+          toevoeging: toevoeging
+          bag_id: bag_id
+          gebruiksfunctie: ""
+          straat: straat
+          huisnummer: huisnummer
+          bag_comment: bag_comment
+          modified: 2000-01-23T04:56:07.000+00:00
+          bijzonderheden: bijzonderheden
+          rijksdriehoekstel_x: rijksdriehoekstel_x
+          id: 0
+          bag_niet_beschikbaar: true
+          atsp: 6
+          gemeente: 1
+          rijksdriehoekstel_y: rijksdriehoekstel_y
+          status: ""
+      properties:
+        count:
+          example: 123
+          type: integer
+        next:
+          example: http://api.example.org/accounts/?offset=400&limit=100
+          format: uri
+          nullable: true
+          type: string
+        previous:
+          example: http://api.example.org/accounts/?offset=200&limit=100
+          format: uri
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/Aansluiting'
+          type: array
+      type: object
+    PaginatedAanwezigCriteriumList:
+      example:
+        next: http://api.example.org/accounts/?offset=400&limit=100
+        previous: http://api.example.org/accounts/?offset=200&limit=100
+        count: 123
+        results:
+        - laatst_gemeld: 2000-01-23T04:56:07.000+00:00
+          criterium: 1
+          id: 0
+          sector: 6
+          laatste_toestand: ""
+          laatste_status: ""
+        - laatst_gemeld: 2000-01-23T04:56:07.000+00:00
+          criterium: 1
+          id: 0
+          sector: 6
+          laatste_toestand: ""
+          laatste_status: ""
+      properties:
+        count:
+          example: 123
+          type: integer
+        next:
+          example: http://api.example.org/accounts/?offset=400&limit=100
+          format: uri
+          nullable: true
+          type: string
+        previous:
+          example: http://api.example.org/accounts/?offset=200&limit=100
+          format: uri
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/AanwezigCriterium'
+          type: array
+      type: object
+    PaginatedAfsluitingZaakList:
+      example:
+        next: http://api.example.org/accounts/?offset=400&limit=100
+        previous: http://api.example.org/accounts/?offset=200&limit=100
+        count: 123
+        results:
+        - created: 2000-01-23T04:56:07.000+00:00
+          gesloten_door: 5
+          geplande_datum: 2000-01-23
+          mogelijke_transities:
+          - mogelijke_transities
+          - mogelijke_transities
+          reden: reden
+          definitieve_datum: 2000-01-23
+          gesloten: true
+          reden_van_afwijzing: reden_van_afwijzing
+          aansluiting: 6
+          modified: 2000-01-23T04:56:07.000+00:00
+          id: 0
+          status_changed: 2000-01-23T04:56:07.000+00:00
+          user: 1
+          status: ""
+        - created: 2000-01-23T04:56:07.000+00:00
+          gesloten_door: 5
+          geplande_datum: 2000-01-23
+          mogelijke_transities:
+          - mogelijke_transities
+          - mogelijke_transities
+          reden: reden
+          definitieve_datum: 2000-01-23
+          gesloten: true
+          reden_van_afwijzing: reden_van_afwijzing
+          aansluiting: 6
+          modified: 2000-01-23T04:56:07.000+00:00
+          id: 0
+          status_changed: 2000-01-23T04:56:07.000+00:00
+          user: 1
+          status: ""
+      properties:
+        count:
+          example: 123
+          type: integer
+        next:
+          example: http://api.example.org/accounts/?offset=400&limit=100
+          format: uri
+          nullable: true
+          type: string
+        previous:
+          example: http://api.example.org/accounts/?offset=200&limit=100
+          format: uri
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/AfsluitingZaak'
+          type: array
+      type: object
+    PaginatedAfspraakList:
+      example:
+        next: http://api.example.org/accounts/?offset=400&limit=100
+        previous: http://api.example.org/accounts/?offset=200&limit=100
+        count: 123
+        results:
+        - titel: titel
+          start_tijd: 2000-01-23T04:56:07.000+00:00
+          start: 2000-01-23T04:56:07.000+00:00
+          aansluiting: 6
+          eind_tijd: 2000-01-23T04:56:07.000+00:00
+          end: 2000-01-23T04:56:07.000+00:00
+          id: 0
+          title: title
+          url: https://openapi-generator.tech
+        - titel: titel
+          start_tijd: 2000-01-23T04:56:07.000+00:00
+          start: 2000-01-23T04:56:07.000+00:00
+          aansluiting: 6
+          eind_tijd: 2000-01-23T04:56:07.000+00:00
+          end: 2000-01-23T04:56:07.000+00:00
+          id: 0
+          title: title
+          url: https://openapi-generator.tech
+      properties:
+        count:
+          example: 123
+          type: integer
+        next:
+          example: http://api.example.org/accounts/?offset=400&limit=100
+          format: uri
+          nullable: true
+          type: string
+        previous:
+          example: http://api.example.org/accounts/?offset=200&limit=100
+          format: uri
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/Afspraak'
+          type: array
+      type: object
+    PaginatedContactPersoonList:
+      example:
+        next: http://api.example.org/accounts/?offset=400&limit=100
+        previous: http://api.example.org/accounts/?offset=200&limit=100
+        count: 123
+        results:
+        - achternaam: achternaam
+          is_technisch_contact: true
+          tussenvoegsel: tussenvoegsel
+          created: 2000-01-23T04:56:07.000+00:00
+          telefoonnummers:
+          - omschrijving: omschrijving
+            telefoonnummer: telefoonnummer
+            id: 1
+          - omschrijving: omschrijving
+            telefoonnummer: telefoonnummer
+            id: 1
+          aansluiting: 6
+          voornaam: voornaam
+          modified: 2000-01-23T04:56:07.000+00:00
+          id: 0
+          email: email
+        - achternaam: achternaam
+          is_technisch_contact: true
+          tussenvoegsel: tussenvoegsel
+          created: 2000-01-23T04:56:07.000+00:00
+          telefoonnummers:
+          - omschrijving: omschrijving
+            telefoonnummer: telefoonnummer
+            id: 1
+          - omschrijving: omschrijving
+            telefoonnummer: telefoonnummer
+            id: 1
+          aansluiting: 6
+          voornaam: voornaam
+          modified: 2000-01-23T04:56:07.000+00:00
+          id: 0
+          email: email
+      properties:
+        count:
+          example: 123
+          type: integer
+        next:
+          example: http://api.example.org/accounts/?offset=400&limit=100
+          format: uri
+          nullable: true
+          type: string
+        previous:
+          example: http://api.example.org/accounts/?offset=200&limit=100
+          format: uri
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/ContactPersoon'
+          type: array
+      type: object
+    PaginatedCriteriumList:
+      example:
+        next: http://api.example.org/accounts/?offset=400&limit=100
+        previous: http://api.example.org/accounts/?offset=200&limit=100
+        count: 123
+        results:
+        - description: description
+          id: 0
+          naam: 441289069
+        - description: description
+          id: 0
+          naam: 441289069
+      properties:
+        count:
+          example: 123
+          type: integer
+        next:
+          example: http://api.example.org/accounts/?offset=400&limit=100
+          format: uri
+          nullable: true
+          type: string
+        previous:
+          example: http://api.example.org/accounts/?offset=200&limit=100
+          format: uri
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/Criterium'
+          type: array
+      type: object
+    PaginatedGemeenteList:
+      example:
+        next: http://api.example.org/accounts/?offset=400&limit=100
+        previous: http://api.example.org/accounts/?offset=200&limit=100
+        count: 123
+        results:
+        - id: 0
+          naam: naam
+          regio: 6
+        - id: 0
+          naam: naam
+          regio: 6
+      properties:
+        count:
+          example: 123
+          type: integer
+        next:
+          example: http://api.example.org/accounts/?offset=400&limit=100
+          format: uri
+          nullable: true
+          type: string
+        previous:
+          example: http://api.example.org/accounts/?offset=200&limit=100
+          format: uri
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/Gemeente'
+          type: array
+      type: object
+    PaginatedKiezerVervangenZaakList:
+      example:
+        next: http://api.example.org/accounts/?offset=400&limit=100
+        previous: http://api.example.org/accounts/?offset=200&limit=100
+        count: 123
+        results:
+        - description: description
+        - description: description
+      properties:
+        count:
+          example: 123
+          type: integer
+        next:
+          example: http://api.example.org/accounts/?offset=400&limit=100
+          format: uri
+          nullable: true
+          type: string
+        previous:
+          example: http://api.example.org/accounts/?offset=200&limit=100
+          format: uri
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/KiezerVervangenZaak'
+          type: array
+      type: object
+    PaginatedMeldingList:
+      example:
+        next: http://api.example.org/accounts/?offset=400&limit=100
+        previous: http://api.example.org/accounts/?offset=200&limit=100
+        count: 123
+        results:
+        - aansluitnummer: aansluitnummer
+          data: data
+          toestand: ""
+          actueel: true
+          gms_id: gms_id
+          melding_id: melding_id
+          criterium: 6
+          tijd: 2000-01-23T04:56:07.000+00:00
+          id: 0
+          prio: ""
+          sector: 1
+          oorzaak: oorzaak
+          status: ""
+        - aansluitnummer: aansluitnummer
+          data: data
+          toestand: ""
+          actueel: true
+          gms_id: gms_id
+          melding_id: melding_id
+          criterium: 6
+          tijd: 2000-01-23T04:56:07.000+00:00
+          id: 0
+          prio: ""
+          sector: 1
+          oorzaak: oorzaak
+          status: ""
+      properties:
+        count:
+          example: 123
+          type: integer
+        next:
+          example: http://api.example.org/accounts/?offset=400&limit=100
+          format: uri
+          nullable: true
+          type: string
+        previous:
+          example: http://api.example.org/accounts/?offset=200&limit=100
+          format: uri
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/Melding'
+          type: array
+      type: object
+    PaginatedMeldkamerList:
+      example:
+        next: http://api.example.org/accounts/?offset=400&limit=100
+        previous: http://api.example.org/accounts/?offset=200&limit=100
+        count: 123
+        results:
+        - afkorting: afkorting
+          id: 0
+          naam: naam
+        - afkorting: afkorting
+          id: 0
+          naam: naam
+      properties:
+        count:
+          example: 123
+          type: integer
+        next:
+          example: http://api.example.org/accounts/?offset=400&limit=100
+          format: uri
+          nullable: true
+          type: string
+        previous:
+          example: http://api.example.org/accounts/?offset=200&limit=100
+          format: uri
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/Meldkamer'
+          type: array
+      type: object
+    PaginatedMigratieZaakList:
+      example:
+        next: http://api.example.org/accounts/?offset=400&limit=100
+        previous: http://api.example.org/accounts/?offset=200&limit=100
+        count: 123
+        results:
+        - gesloten: true
+          created: 2000-01-23T04:56:07.000+00:00
+          gesloten_door: 5
+          aansluiting: 6
+          modified: 2000-01-23T04:56:07.000+00:00
+          id: 0
+          mogelijke_transities:
+          - mogelijke_transities
+          - mogelijke_transities
+          status_changed: 2000-01-23T04:56:07.000+00:00
+          user: 1
+          status: ""
+        - gesloten: true
+          created: 2000-01-23T04:56:07.000+00:00
+          gesloten_door: 5
+          aansluiting: 6
+          modified: 2000-01-23T04:56:07.000+00:00
+          id: 0
+          mogelijke_transities:
+          - mogelijke_transities
+          - mogelijke_transities
+          status_changed: 2000-01-23T04:56:07.000+00:00
+          user: 1
+          status: ""
+      properties:
+        count:
+          example: 123
+          type: integer
+        next:
+          example: http://api.example.org/accounts/?offset=400&limit=100
+          format: uri
+          nullable: true
+          type: string
+        previous:
+          example: http://api.example.org/accounts/?offset=200&limit=100
+          format: uri
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/MigratieZaak'
+          type: array
+      type: object
+    PaginatedMutatieZaakList:
+      example:
+        next: http://api.example.org/accounts/?offset=400&limit=100
+        previous: http://api.example.org/accounts/?offset=200&limit=100
+        count: 123
+        results:
+        - created: 2000-01-23T04:56:07.000+00:00
+          gesloten_door: 5
+          mogelijke_transities:
+          - mogelijke_transities
+          - mogelijke_transities
+          reden: reden
+          bouwdelen_toevoegen: true
+          gesloten: true
+          omschrijving_van_wijziging: omschrijving_van_wijziging
+          aansluiting: 6
+          modified: 2000-01-23T04:56:07.000+00:00
+          id: 0
+          status_changed: 2000-01-23T04:56:07.000+00:00
+          user: 1
+          status: ""
+        - created: 2000-01-23T04:56:07.000+00:00
+          gesloten_door: 5
+          mogelijke_transities:
+          - mogelijke_transities
+          - mogelijke_transities
+          reden: reden
+          bouwdelen_toevoegen: true
+          gesloten: true
+          omschrijving_van_wijziging: omschrijving_van_wijziging
+          aansluiting: 6
+          modified: 2000-01-23T04:56:07.000+00:00
+          id: 0
+          status_changed: 2000-01-23T04:56:07.000+00:00
+          user: 1
+          status: ""
+      properties:
+        count:
+          example: 123
+          type: integer
+        next:
+          example: http://api.example.org/accounts/?offset=400&limit=100
+          format: uri
+          nullable: true
+          type: string
+        previous:
+          example: http://api.example.org/accounts/?offset=200&limit=100
+          format: uri
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/MutatieZaak'
+          type: array
+      type: object
+    PaginatedNieuweAansluitingZaakList:
+      example:
+        next: http://api.example.org/accounts/?offset=400&limit=100
+        previous: http://api.example.org/accounts/?offset=200&limit=100
+        count: 123
+        results:
+        - gesloten: true
+          created: 2000-01-23T04:56:07.000+00:00
+          gesloten_door: 5
+          aansluiting: 6
+          modified: 2000-01-23T04:56:07.000+00:00
+          id: 0
+          mogelijke_transities:
+          - mogelijke_transities
+          - mogelijke_transities
+          status_changed: 2000-01-23T04:56:07.000+00:00
+          user: 1
+          status: ""
+        - gesloten: true
+          created: 2000-01-23T04:56:07.000+00:00
+          gesloten_door: 5
+          aansluiting: 6
+          modified: 2000-01-23T04:56:07.000+00:00
+          id: 0
+          mogelijke_transities:
+          - mogelijke_transities
+          - mogelijke_transities
+          status_changed: 2000-01-23T04:56:07.000+00:00
+          user: 1
+          status: ""
+      properties:
+        count:
+          example: 123
+          type: integer
+        next:
+          example: http://api.example.org/accounts/?offset=400&limit=100
+          format: uri
+          nullable: true
+          type: string
+        previous:
+          example: http://api.example.org/accounts/?offset=200&limit=100
+          format: uri
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/NieuweAansluitingZaak'
+          type: array
+      type: object
+    PaginatedRegioList:
+      example:
+        next: http://api.example.org/accounts/?offset=400&limit=100
+        previous: http://api.example.org/accounts/?offset=200&limit=100
+        count: 123
+        results:
+        - code: code
+          meldkamer: 6
+          id: 0
+          naam: naam
+        - code: code
+          meldkamer: 6
+          id: 0
+          naam: naam
+      properties:
+        count:
+          example: 123
+          type: integer
+        next:
+          example: http://api.example.org/accounts/?offset=400&limit=100
+          format: uri
+          nullable: true
+          type: string
+        previous:
+          example: http://api.example.org/accounts/?offset=200&limit=100
+          format: uri
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/Regio'
+          type: array
+      type: object
+    PaginatedSectorList:
+      example:
+        next: http://api.example.org/accounts/?offset=400&limit=100
+        previous: http://api.example.org/accounts/?offset=200&limit=100
+        count: 123
+        results:
+        - waarschuwingsadressen:
+          - telefoonnummer: 5
+            created: 2000-01-23T04:56:07.000+00:00
+            modified: 2000-01-23T04:56:07.000+00:00
+            id: 5
+            prioriteit: -1158723813
+          - telefoonnummer: 5
+            created: 2000-01-23T04:56:07.000+00:00
+            modified: 2000-01-23T04:56:07.000+00:00
+            id: 5
+            prioriteit: -1158723813
+          bag_lookup_id: bag_lookup_id
+          plaats: plaats
+          created: 2000-01-23T04:56:07.000+00:00
+          huisletter: huisletter
+          postcode: postcode
+          naam: naam
+          toestand: ""
+          nummer: -1517921766
+          toevoeging: toevoeging
+          gebruiksfunctie: ""
+          bag_id: bag_id
+          straat: straat
+          huisnummer: huisnummer
+          aansluiting: 6
+          modified: 2000-01-23T04:56:07.000+00:00
+          rijksdriehoekstel_x: rijksdriehoekstel_x
+          id: 0
+          rijksdriehoekstel_y: rijksdriehoekstel_y
+        - waarschuwingsadressen:
+          - telefoonnummer: 5
+            created: 2000-01-23T04:56:07.000+00:00
+            modified: 2000-01-23T04:56:07.000+00:00
+            id: 5
+            prioriteit: -1158723813
+          - telefoonnummer: 5
+            created: 2000-01-23T04:56:07.000+00:00
+            modified: 2000-01-23T04:56:07.000+00:00
+            id: 5
+            prioriteit: -1158723813
+          bag_lookup_id: bag_lookup_id
+          plaats: plaats
+          created: 2000-01-23T04:56:07.000+00:00
+          huisletter: huisletter
+          postcode: postcode
+          naam: naam
+          toestand: ""
+          nummer: -1517921766
+          toevoeging: toevoeging
+          gebruiksfunctie: ""
+          bag_id: bag_id
+          straat: straat
+          huisnummer: huisnummer
+          aansluiting: 6
+          modified: 2000-01-23T04:56:07.000+00:00
+          rijksdriehoekstel_x: rijksdriehoekstel_x
+          id: 0
+          rijksdriehoekstel_y: rijksdriehoekstel_y
+      properties:
+        count:
+          example: 123
+          type: integer
+        next:
+          example: http://api.example.org/accounts/?offset=400&limit=100
+          format: uri
+          nullable: true
+          type: string
+        previous:
+          example: http://api.example.org/accounts/?offset=200&limit=100
+          format: uri
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/Sector'
+          type: array
+      type: object
+    PaginatedTelefoonnummerList:
+      example:
+        next: http://api.example.org/accounts/?offset=400&limit=100
+        previous: http://api.example.org/accounts/?offset=200&limit=100
+        count: 123
+        results:
+        - omschrijving: omschrijving
+          telefoonnummer: telefoonnummer
+          id: 1
+        - omschrijving: omschrijving
+          telefoonnummer: telefoonnummer
+          id: 1
+      properties:
+        count:
+          example: 123
+          type: integer
+        next:
+          example: http://api.example.org/accounts/?offset=400&limit=100
+          format: uri
+          nullable: true
+          type: string
+        previous:
+          example: http://api.example.org/accounts/?offset=200&limit=100
+          format: uri
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/Telefoonnummer'
+          type: array
+      type: object
+    PaginatedWaarschuwingsadresList:
+      example:
+        next: http://api.example.org/accounts/?offset=400&limit=100
+        previous: http://api.example.org/accounts/?offset=200&limit=100
+        count: 123
+        results:
+        - telefoonnummer: 5
+          created: 2000-01-23T04:56:07.000+00:00
+          modified: 2000-01-23T04:56:07.000+00:00
+          id: 5
+          prioriteit: -1158723813
+        - telefoonnummer: 5
+          created: 2000-01-23T04:56:07.000+00:00
+          modified: 2000-01-23T04:56:07.000+00:00
+          id: 5
+          prioriteit: -1158723813
+      properties:
+        count:
+          example: 123
+          type: integer
+        next:
+          example: http://api.example.org/accounts/?offset=400&limit=100
+          format: uri
+          nullable: true
+          type: string
+        previous:
+          example: http://api.example.org/accounts/?offset=200&limit=100
+          format: uri
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/Waarschuwingsadres'
+          type: array
+      type: object
+    PatchedAansluitingBestandRequest:
+      example:
+        omschrijving: omschrijving
+        file: ""
+        naam: naam
+        type: ""
+      properties:
+        naam:
+          maxLength: 255
+          type: string
+        omschrijving:
+          nullable: true
+          title: Opmerking
+          type: string
+        type:
+          allOf:
+          - $ref: '#/components/schemas/AansluitingBestandTypeEnum'
+          description: overige = Overige, pve = PVE, upd = UPD, nva = NVA (nota van
+            aanvulling), nvw = NVW (nota van wijzigingen), gms_mutatierapport = GMS
+            mutatierapport
+        file:
+          format: binary
+          nullable: true
+          title: Bestand
+          type: string
+      type: object
+    PatchedAansluitingToestandRequest:
+      example:
+        toestand: ""
+      properties:
+        toestand:
+          allOf:
+          - $ref: '#/components/schemas/MeldingStatus'
+          description: 0 = Passief, 1 = Actief
+          maximum: 2147483647
+          minimum: -2147483648
+      type: object
+    PatchedAanwezigCriteriumRequest:
+      example:
+        criterium: 0
+      properties:
+        criterium:
+          type: integer
+      type: object
+    PatchedAfspraakRequest:
+      example:
+        titel: titel
+        start_tijd: 2000-01-23T04:56:07.000+00:00
+        aansluiting: 0
+        eind_tijd: 2000-01-23T04:56:07.000+00:00
+      properties:
+        start_tijd:
+          format: date-time
+          type: string
+        eind_tijd:
+          format: date-time
+          type: string
+        titel:
+          maxLength: 255
+          minLength: 1
+          title: Title
+          type: string
+        aansluiting:
+          nullable: true
+          type: integer
+      type: object
+    PatchedContactPersoonRequest:
+      example:
+        achternaam: achternaam
+        is_technisch_contact: true
+        tussenvoegsel: tussenvoegsel
+        voornaam: voornaam
+        email: email
+      properties:
+        voornaam:
+          maxLength: 255
+          minLength: 1
+          type: string
+        tussenvoegsel:
+          maxLength: 255
+          nullable: true
+          type: string
+        achternaam:
+          maxLength: 255
+          minLength: 1
+          type: string
+        is_technisch_contact:
+          title: Technisch contact
+          type: boolean
+        email:
+          description: contactpersoon t.b.v. informatie voor de repressieve dienst
+            (verplicht voor een technisch contact)
+          format: email
+          maxLength: 254
+          nullable: true
+          title: E-mailadres
+          type: string
+      type: object
+    PatchedSectorToestandRequest:
+      example:
+        toestand: ""
+      properties:
+        toestand:
+          allOf:
+          - $ref: '#/components/schemas/MeldingStatus'
+          description: 0 = Test, 1 = Actief
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+      type: object
+    PatchedTelefoonnummerRequest:
+      example:
+        omschrijving: omschrijving
+        telefoonnummer: telefoonnummer
+      properties:
+        telefoonnummer:
+          maxLength: 255
+          minLength: 1
+          type: string
+        omschrijving:
+          maxLength: 255
+          nullable: true
+          type: string
+      type: object
+    PatchedTransitionRequest:
+      example:
+        transition: transition
+      properties:
+        transition:
+          minLength: 1
+          type: string
+      type: object
+    PatchedWaarschuwingsadresRequest:
+      example:
+        telefoonnummer: 0
+        prioriteit: 441289069
+      properties:
+        telefoonnummer:
+          type: integer
+        prioriteit:
+          description: De contactpersoon met de hoogste prioriteit wordt als eerste
+            opgeroepen
+          maximum: 2147483647
+          minimum: -2147483648
+          title: Proriteit
+          type: integer
+      type: object
+    PrioEnum:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      type: integer
+    Regio:
+      example:
+        code: code
+        meldkamer: 6
+        id: 0
+        naam: naam
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        naam:
+          maxLength: 50
+          type: string
+        meldkamer:
+          type: integer
+        code:
+          maxLength: 4
+          nullable: true
+          type: string
+      required:
+      - id
+      - meldkamer
+      - naam
+      type: object
+    Search:
+      example:
+        aansluitnummer: aansluitnummer
+        id: id
+        naam: naam
+      properties:
+        id:
+          readOnly: true
+          type: string
+        naam:
+          readOnly: true
+          type: string
+        aansluitnummer:
+          readOnly: true
+          type: string
+      required:
+      - aansluitnummer
+      - id
+      - naam
+      type: object
+    Sector:
+      example:
+        waarschuwingsadressen:
+        - telefoonnummer: 5
+          created: 2000-01-23T04:56:07.000+00:00
+          modified: 2000-01-23T04:56:07.000+00:00
+          id: 5
+          prioriteit: -1158723813
+        - telefoonnummer: 5
+          created: 2000-01-23T04:56:07.000+00:00
+          modified: 2000-01-23T04:56:07.000+00:00
+          id: 5
+          prioriteit: -1158723813
+        bag_lookup_id: bag_lookup_id
+        plaats: plaats
+        created: 2000-01-23T04:56:07.000+00:00
+        huisletter: huisletter
+        postcode: postcode
+        naam: naam
+        toestand: ""
+        nummer: -1517921766
+        toevoeging: toevoeging
+        gebruiksfunctie: ""
+        bag_id: bag_id
+        straat: straat
+        huisnummer: huisnummer
+        aansluiting: 6
+        modified: 2000-01-23T04:56:07.000+00:00
+        rijksdriehoekstel_x: rijksdriehoekstel_x
+        id: 0
+        rijksdriehoekstel_y: rijksdriehoekstel_y
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        aansluiting:
+          readOnly: true
+          type: integer
+        nummer:
+          maximum: 2147483647
+          minimum: -2147483648
+          type: integer
+        naam:
+          maxLength: 255
+          type: string
+        straat:
+          maxLength: 255
+          type: string
+        huisnummer:
+          maxLength: 22
+          type: string
+        huisletter:
+          maxLength: 22
+          type: string
+        toevoeging:
+          maxLength: 22
+          type: string
+        postcode:
+          maxLength: 7
+          type: string
+        plaats:
+          maxLength: 255
+          type: string
+        rijksdriehoekstel_x:
+          description: https://www.kadaster.nl/zakelijk/registraties/basisregistraties/rijksdriehoeksmeting/rijksdriehoeksstelsel
+          format: decimal
+          nullable: true
+          pattern: ^\d{0,6}(?:\.\d{0,16})?$
+          title: X (RD-coördinaten)
+          type: string
+        rijksdriehoekstel_y:
+          description: https://www.kadaster.nl/zakelijk/registraties/basisregistraties/rijksdriehoeksmeting/rijksdriehoeksstelsel
+          format: decimal
+          nullable: true
+          pattern: ^\d{0,6}(?:\.\d{0,16})?$
+          title: Y (RD-coördinaten)
+          type: string
+        waarschuwingsadressen:
+          items:
+            $ref: '#/components/schemas/Waarschuwingsadres'
+          readOnly: true
+          type: array
+        created:
+          format: date-time
+          readOnly: true
+          title: Toegevoegd
+          type: string
+        modified:
+          format: date-time
+          readOnly: true
+          type: string
+        toestand:
+          allOf:
+          - $ref: '#/components/schemas/MeldingStatus'
+          description: 0 = Test, 1 = Actief
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        gebruiksfunctie:
+          allOf:
+          - $ref: '#/components/schemas/GebruiksfunctieEnum'
+          nullable: true
+        bag_id:
+          readOnly: true
+          type: string
+        bag_lookup_id:
+          maxLength: 100
+          type: string
+      required:
+      - aansluiting
+      - bag_id
+      - created
+      - id
+      - modified
+      - naam
+      - nummer
+      - waarschuwingsadressen
+      type: object
+    SectorRequest:
+      example:
+        bag_lookup_id: bag_lookup_id
+        plaats: plaats
+        huisletter: huisletter
+        postcode: postcode
+        naam: naam
+        toestand: ""
+        nummer: -1803530559
+        toevoeging: toevoeging
+        gebruiksfunctie: ""
+        straat: straat
+        huisnummer: huisnummer
+        rijksdriehoekstel_x: rijksdriehoekstel_x
+        rijksdriehoekstel_y: rijksdriehoekstel_y
+      properties:
+        nummer:
+          maximum: 2147483647
+          minimum: -2147483648
+          type: integer
+        naam:
+          maxLength: 255
+          minLength: 1
+          type: string
+        straat:
+          maxLength: 255
+          type: string
+        huisnummer:
+          maxLength: 22
+          type: string
+        huisletter:
+          maxLength: 22
+          type: string
+        toevoeging:
+          maxLength: 22
+          type: string
+        postcode:
+          maxLength: 7
+          type: string
+        plaats:
+          maxLength: 255
+          type: string
+        rijksdriehoekstel_x:
+          description: https://www.kadaster.nl/zakelijk/registraties/basisregistraties/rijksdriehoeksmeting/rijksdriehoeksstelsel
+          format: decimal
+          nullable: true
+          pattern: ^\d{0,6}(?:\.\d{0,16})?$
+          title: X (RD-coördinaten)
+          type: string
+        rijksdriehoekstel_y:
+          description: https://www.kadaster.nl/zakelijk/registraties/basisregistraties/rijksdriehoeksmeting/rijksdriehoeksstelsel
+          format: decimal
+          nullable: true
+          pattern: ^\d{0,6}(?:\.\d{0,16})?$
+          title: Y (RD-coördinaten)
+          type: string
+        toestand:
+          allOf:
+          - $ref: '#/components/schemas/MeldingStatus'
+          description: 0 = Test, 1 = Actief
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        gebruiksfunctie:
+          allOf:
+          - $ref: '#/components/schemas/GebruiksfunctieEnum'
+          nullable: true
+        bag_lookup_id:
+          maxLength: 100
+          type: string
+      required:
+      - naam
+      - nummer
+      type: object
+    SectorToestand:
+      example:
+        toestand: ""
+      properties:
+        toestand:
+          allOf:
+          - $ref: '#/components/schemas/MeldingStatus'
+          description: 0 = Test, 1 = Actief
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+      type: object
+    Telefoonnummer:
+      example:
+        omschrijving: omschrijving
+        telefoonnummer: telefoonnummer
+        id: 1
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        telefoonnummer:
+          maxLength: 255
+          type: string
+        omschrijving:
+          maxLength: 255
+          nullable: true
+          type: string
+      required:
+      - id
+      - telefoonnummer
+      type: object
+    TelefoonnummerRequest:
+      example:
+        omschrijving: omschrijving
+        telefoonnummer: telefoonnummer
+      properties:
+        telefoonnummer:
+          maxLength: 255
+          minLength: 1
+          type: string
+        omschrijving:
+          maxLength: 255
+          nullable: true
+          type: string
+      required:
+      - telefoonnummer
+      type: object
+    Transition:
+      example:
+        label: label
+        transition: transition
+      properties:
+        transition:
+          type: string
+        label:
+          readOnly: true
+          type: string
+      required:
+      - label
+      - transition
+      type: object
+    ValidationObject:
+      example:
+        object_type: ""
+        object_id: 0
+        results:
+        - melding: melding
+          type: ""
+        - melding: melding
+          type: ""
+      properties:
+        object_type:
+          allOf:
+          - $ref: '#/components/schemas/ObjectTypeEnum'
+          readOnly: true
+        object_id:
+          readOnly: true
+          type: integer
+        results:
+          items:
+            $ref: '#/components/schemas/ValidationRule'
+          type: array
+      required:
+      - object_id
+      - object_type
+      - results
+      type: object
+    ValidationRule:
+      example:
+        melding: melding
+        type: ""
+      properties:
+        type:
+          allOf:
+          - $ref: '#/components/schemas/ValidationRuleTypeEnum'
+          readOnly: true
+        melding:
+          readOnly: true
+          type: string
+      required:
+      - melding
+      - type
+      type: object
+    ValidationRuleTypeEnum:
+      enum:
+      - waarschuwingen
+      - foutmelding
+      type: string
+    Waarschuwingsadres:
+      example:
+        telefoonnummer: 5
+        created: 2000-01-23T04:56:07.000+00:00
+        modified: 2000-01-23T04:56:07.000+00:00
+        id: 5
+        prioriteit: -1158723813
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        telefoonnummer:
+          type: integer
+        prioriteit:
+          description: De contactpersoon met de hoogste prioriteit wordt als eerste
+            opgeroepen
+          maximum: 2147483647
+          minimum: -2147483648
+          title: Proriteit
+          type: integer
+        created:
+          format: date-time
+          readOnly: true
+          title: Toegevoegd
+          type: string
+        modified:
+          format: date-time
+          readOnly: true
+          type: string
+      required:
+      - created
+      - id
+      - modified
+      - telefoonnummer
+      type: object
+    WaarschuwingsadresRequest:
+      example:
+        telefoonnummer: 0
+        prioriteit: 441289069
+      properties:
+        telefoonnummer:
+          type: integer
+        prioriteit:
+          description: De contactpersoon met de hoogste prioriteit wordt als eerste
+            opgeroepen
+          maximum: 2147483647
+          minimum: -2147483648
+          title: Proriteit
+          type: integer
+      required:
+      - telefoonnummer
+      type: object
+    Zaak:
+      example:
+        id: 0
+        type: type
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        type:
+          type: string
+      required:
+      - id
+      - type
+      type: object
+  securitySchemes:
+    ApiKeyAuth:
+      description: "Let op bij het gebruik van deze methode dat de prefix van de Authorization\
+        \ header 'Api-Key' is. \n\nEen voorbeeld van de volledige Authorization header\
+        \ ziet er als volgt uit:\n\n \"Authorization: Api-Key pEBHjrqG.yYfF0vWjY6vVyAevzjbeKdD6LZIIMIbY\""
+      in: header
+      name: Authorization
+      type: apiKey
+    cookieAuth:
+      in: cookie
+      name: sessionid
+      type: apiKey
+x-tagGroups:
+- name: Aansluitingen
+  tags:
+  - aansluitingen
+  - sectoren
+  - contactpersonen
+  - telefoonnummers
+  - waarschuwingsadressen
+  - aanwezige criteria
+  - bestanden
+- name: Zaken
+  tags:
+  - afsluiting
+  - migratie
+  - mutatie
+  - nieuwe aansluiting
+- name: ATSP
+  tags:
+  - atsps
+- name: Meldingen
+  tags:
+  - meldingen
+- name: Overige
+  tags:
+  - brandweer
+  - model_aansluiting
+  - afspraken
