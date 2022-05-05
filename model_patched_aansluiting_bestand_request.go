@@ -1,7 +1,7 @@
 /*
 AMSVR Broker API
 
-# Introductie     Voor u heeft u de online documentatie van de AMSVR Broker API. Omdat het een Nederlands domein      betreft worden er Engelse en Nederlandse terminologie door elkaar heen gebruikt.  Liefhebbers van de Swagger UI kunnen [hier terecht](/swagger-ui). Daarnaast is de API eveneens beschikbaar in de op endpoint niveau zoals bijvoorbeeld [hier](/api/aansluitingen).  ##        
+# Introductie     Voor u heeft u de online documentatie van de AMSVR Broker API. Omdat het een Nederlands domein      betreft worden er Engelse en Nederlandse terminologie door elkaar heen gebruikt.  Liefhebbers van de Swagger UI kunnen [hier terecht](/swagger-ui). Daarnaast is de API eveneens beschikbaar in de op endpoint niveau zoals bijvoorbeeld [hier](/api/aansluitingen).  ##
 
 API version: release-0.6.14
 */
@@ -12,16 +12,15 @@ package broker
 
 import (
 	"encoding/json"
-	"os"
 )
 
 // PatchedAansluitingBestandRequest struct for PatchedAansluitingBestandRequest
 type PatchedAansluitingBestandRequest struct {
-	Naam *string `json:"naam,omitempty"`
+	Naam         *string        `json:"naam,omitempty"`
 	Omschrijving NullableString `json:"omschrijving,omitempty"`
 	// overige = Overige, pve = PVE, upd = UPD, nva = NVA (nota van aanvulling), nvw = NVW (nota van wijzigingen), gms_mutatierapport = GMS mutatierapport
 	Type NullableAansluitingBestandTypeEnum `json:"type,omitempty"`
-	File Nullable*os.File `json:"file,omitempty"`
+	File NullableString                     `json:"file,omitempty"`
 }
 
 // NewPatchedAansluitingBestandRequest instantiates a new PatchedAansluitingBestandRequest object
@@ -105,6 +104,7 @@ func (o *PatchedAansluitingBestandRequest) HasOmschrijving() bool {
 func (o *PatchedAansluitingBestandRequest) SetOmschrijving(v string) {
 	o.Omschrijving.Set(&v)
 }
+
 // SetOmschrijvingNil sets the value for Omschrijving to be an explicit nil
 func (o *PatchedAansluitingBestandRequest) SetOmschrijvingNil() {
 	o.Omschrijving.Set(nil)
@@ -147,6 +147,7 @@ func (o *PatchedAansluitingBestandRequest) HasType() bool {
 func (o *PatchedAansluitingBestandRequest) SetType(v AansluitingBestandTypeEnum) {
 	o.Type.Set(&v)
 }
+
 // SetTypeNil sets the value for Type to be an explicit nil
 func (o *PatchedAansluitingBestandRequest) SetTypeNil() {
 	o.Type.Set(nil)
@@ -158,18 +159,18 @@ func (o *PatchedAansluitingBestandRequest) UnsetType() {
 }
 
 // GetFile returns the File field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *PatchedAansluitingBestandRequest) GetFile() *os.File {
+func (o *PatchedAansluitingBestandRequest) GetFile() *string {
 	if o == nil || o.File.Get() == nil {
-		var ret *os.File
+		var ret *string
 		return ret
 	}
-	return *o.File.Get()
+	return o.File.Get()
 }
 
 // GetFileOk returns a tuple with the File field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *PatchedAansluitingBestandRequest) GetFileOk() (**os.File, bool) {
+func (o *PatchedAansluitingBestandRequest) GetFileOk() (*string, bool) {
 	if o == nil {
 		return nil, false
 	}
@@ -185,10 +186,11 @@ func (o *PatchedAansluitingBestandRequest) HasFile() bool {
 	return false
 }
 
-// SetFile gets a reference to the given Nullable*os.File and assigns it to the File field.
-func (o *PatchedAansluitingBestandRequest) SetFile(v *os.File) {
-	o.File.Set(&v)
+// SetFile gets a reference to the given Nullable*string and assigns it to the File field.
+func (o *PatchedAansluitingBestandRequest) SetFile(v *string) {
+	o.File.Set(v)
 }
+
 // SetFileNil sets the value for File to be an explicit nil
 func (o *PatchedAansluitingBestandRequest) SetFileNil() {
 	o.File.Set(nil)
@@ -251,5 +253,3 @@ func (v *NullablePatchedAansluitingBestandRequest) UnmarshalJSON(src []byte) err
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-
