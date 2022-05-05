@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 .travis.yml
 README.md
 api/openapi.yaml
@@ -20,8 +19,10 @@ api_schema_json.go
 api_sectoren.go
 api_telefoonnummers.go
 api_waarschuwingsadressen.go
+api_zaken.go
 client.go
 configuration.go
+docs/ATSP.md
 docs/Aansluiting.md
 docs/AansluitingBestand.md
 docs/AansluitingBestandRequest.md
@@ -44,11 +45,10 @@ docs/AfsluitingZaakStatusEnum.md
 docs/AfsluitingZaakTransitieRequest.md
 docs/AfsluitingZaakUitvoerenRequest.md
 docs/Afspraak.md
+docs/AfspraakCreate.md
+docs/AfspraakCreateRequest.md
 docs/AfspraakRequest.md
-docs/AfspraakVerplaatsen.md
-docs/AfspraakVerplaatsenRequest.md
 docs/AfsprakenApi.md
-docs/Atsp.md
 docs/AtspsApi.md
 docs/BestandenApi.md
 docs/BookableTimes.md
@@ -97,12 +97,13 @@ docs/NieuweAansluitingZaakLiveTestRequest.md
 docs/NieuweAansluitingZaakStatusEnum.md
 docs/NieuweAfsluitingZaakGoedkeurenRequest.md
 docs/ObjectTypeEnum.md
+docs/PaginatedATSPList.md
 docs/PaginatedAansluitingBestandList.md
 docs/PaginatedAansluitingList.md
 docs/PaginatedAanwezigCriteriumList.md
 docs/PaginatedAfsluitingZaakList.md
+docs/PaginatedAfspraakCreateList.md
 docs/PaginatedAfspraakList.md
-docs/PaginatedAtspList.md
 docs/PaginatedContactPersoonList.md
 docs/PaginatedCriteriumList.md
 docs/PaginatedGemeenteList.md
@@ -132,7 +133,10 @@ docs/Search.md
 docs/Sector.md
 docs/SectorRequest.md
 docs/SectorToestand.md
+docs/SectorWrite.md
+docs/SectorWriteRequest.md
 docs/SectorenApi.md
+docs/StoringscodesEnum.md
 docs/Telefoonnummer.md
 docs/TelefoonnummerRequest.md
 docs/TelefoonnummersApi.md
@@ -144,6 +148,7 @@ docs/Waarschuwingsadres.md
 docs/WaarschuwingsadresRequest.md
 docs/WaarschuwingsadressenApi.md
 docs/Zaak.md
+docs/ZakenApi.md
 git_push.sh
 go.mod
 go.sum
@@ -166,9 +171,9 @@ model_afsluiting_zaak_status_enum.go
 model_afsluiting_zaak_transitie_request.go
 model_afsluiting_zaak_uitvoeren_request.go
 model_afspraak.go
+model_afspraak_create.go
+model_afspraak_create_request.go
 model_afspraak_request.go
-model_afspraak_verplaatsen.go
-model_afspraak_verplaatsen_request.go
 model_atsp.go
 model_bookable_times.go
 model_bookabledays.go
@@ -213,6 +218,7 @@ model_paginated_aansluiting_bestand_list.go
 model_paginated_aansluiting_list.go
 model_paginated_aanwezig_criterium_list.go
 model_paginated_afsluiting_zaak_list.go
+model_paginated_afspraak_create_list.go
 model_paginated_afspraak_list.go
 model_paginated_atsp_list.go
 model_paginated_contact_persoon_list.go
@@ -243,6 +249,9 @@ model_search.go
 model_sector.go
 model_sector_request.go
 model_sector_toestand.go
+model_sector_write.go
+model_sector_write_request.go
+model_storingscodes_enum.go
 model_telefoonnummer.go
 model_telefoonnummer_request.go
 model_transition.go
@@ -253,3 +262,4 @@ model_waarschuwingsadres.go
 model_waarschuwingsadres_request.go
 model_zaak.go
 response.go
+utils.go

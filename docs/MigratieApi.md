@@ -15,18 +15,55 @@ Method | HTTP request | Description
 
 ## ZakenMigratieAnnulerenCreate
 
-> MigratieZaak ZakenMigratieAnnulerenCreate(ctx, id, migratieZaakXRequest)
+> MigratieZaak ZakenMigratieAnnulerenCreate(ctx, id).MigratieZaakXRequest(migratieZaakXRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    migratieZaakXRequest := *openapiclient.NewMigratieZaakXRequest("Description_example") // MigratieZaakXRequest | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.MigratieApi.ZakenMigratieAnnulerenCreate(context.Background(), id).MigratieZaakXRequest(migratieZaakXRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `MigratieApi.ZakenMigratieAnnulerenCreate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenMigratieAnnulerenCreate`: MigratieZaak
+    fmt.Fprintf(os.Stdout, "Response from `MigratieApi.ZakenMigratieAnnulerenCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
-**migratieZaakXRequest** | [**MigratieZaakXRequest**](MigratieZaakXRequest.md)|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiZakenMigratieAnnulerenCreateRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **migratieZaakXRequest** | [**MigratieZaakXRequest**](MigratieZaakXRequest.md) |  | 
 
 ### Return type
 
@@ -48,18 +85,55 @@ Name | Type | Description  | Notes
 
 ## ZakenMigratieGoedkeurenCreate
 
-> MigratieZaak ZakenMigratieGoedkeurenCreate(ctx, id, migratieZaakXRequest)
+> MigratieZaak ZakenMigratieGoedkeurenCreate(ctx, id).MigratieZaakXRequest(migratieZaakXRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    migratieZaakXRequest := *openapiclient.NewMigratieZaakXRequest("Description_example") // MigratieZaakXRequest | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.MigratieApi.ZakenMigratieGoedkeurenCreate(context.Background(), id).MigratieZaakXRequest(migratieZaakXRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `MigratieApi.ZakenMigratieGoedkeurenCreate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenMigratieGoedkeurenCreate`: MigratieZaak
+    fmt.Fprintf(os.Stdout, "Response from `MigratieApi.ZakenMigratieGoedkeurenCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
-**migratieZaakXRequest** | [**MigratieZaakXRequest**](MigratieZaakXRequest.md)|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiZakenMigratieGoedkeurenCreateRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **migratieZaakXRequest** | [**MigratieZaakXRequest**](MigratieZaakXRequest.md) |  | 
 
 ### Return type
 
@@ -81,20 +155,57 @@ Name | Type | Description  | Notes
 
 ## ZakenMigratieIndienenCreate
 
-> Aansluiting ZakenMigratieIndienenCreate(ctx, aansluitnummer, migratieRequest)
+> Aansluiting ZakenMigratieIndienenCreate(ctx, aansluitnummer).MigratieRequest(migratieRequest).Execute()
 
 
 
-Het is mogelijk om een bestaande aansluiting over te nemen van een andere ATSP. Ter verificatie vragen wij om straat + huisnummer (zonder toevoegingen)
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    aansluitnummer := "aansluitnummer_example" // string | 
+    migratieRequest := *openapiclient.NewMigratieRequest("NieuweAansluitnummer_example", int32(123)) // MigratieRequest | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.MigratieApi.ZakenMigratieIndienenCreate(context.Background(), aansluitnummer).MigratieRequest(migratieRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `MigratieApi.ZakenMigratieIndienenCreate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenMigratieIndienenCreate`: Aansluiting
+    fmt.Fprintf(os.Stdout, "Response from `MigratieApi.ZakenMigratieIndienenCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**aansluitnummer** | **string**|  | 
-**migratieRequest** | [**MigratieRequest**](MigratieRequest.md)|  | 
+**aansluitnummer** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiZakenMigratieIndienenCreateRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **migratieRequest** | [**MigratieRequest**](MigratieRequest.md) |  | 
 
 ### Return type
 
@@ -116,28 +227,55 @@ Name | Type | Description  | Notes
 
 ## ZakenMigratieInplannenCreate
 
-> MigratieZaakLiveTestInplannen ZakenMigratieInplannenCreate(ctx, id, optional)
+> MigratieZaakLiveTestInplannen ZakenMigratieInplannenCreate(ctx, id).MigratieZaakLiveTestInplannenRequest(migratieZaakLiveTestInplannenRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    migratieZaakLiveTestInplannenRequest := *openapiclient.NewMigratieZaakLiveTestInplannenRequest() // MigratieZaakLiveTestInplannenRequest |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.MigratieApi.ZakenMigratieInplannenCreate(context.Background(), id).MigratieZaakLiveTestInplannenRequest(migratieZaakLiveTestInplannenRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `MigratieApi.ZakenMigratieInplannenCreate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenMigratieInplannenCreate`: MigratieZaakLiveTestInplannen
+    fmt.Fprintf(os.Stdout, "Response from `MigratieApi.ZakenMigratieInplannenCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
- **optional** | ***ZakenMigratieInplannenCreateOpts** | optional parameters | nil if no parameters
+**id** | **int32** |  | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a ZakenMigratieInplannenCreateOpts struct
+Other parameters are passed through a pointer to a apiZakenMigratieInplannenCreateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **migratieZaakLiveTestInplannenRequest** | [**optional.Interface of MigratieZaakLiveTestInplannenRequest**](MigratieZaakLiveTestInplannenRequest.md)|  | 
+ **migratieZaakLiveTestInplannenRequest** | [**MigratieZaakLiveTestInplannenRequest**](MigratieZaakLiveTestInplannenRequest.md) |  | 
 
 ### Return type
 
@@ -159,31 +297,57 @@ Name | Type | Description  | Notes
 
 ## ZakenMigratieList
 
-> PaginatedMigratieZaakList ZakenMigratieList(ctx, optional)
+> PaginatedMigratieZaakList ZakenMigratieList(ctx).Gesloten(gesloten).Limit(limit).Offset(offset).Status(status).Execute()
 
 
 
-Een migratie zaak wordt automatisch gestart bij het uitvoeren van een migratie
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    gesloten := true // bool |  (optional)
+    limit := int32(56) // int32 | Number of results to return per page. (optional)
+    offset := int32(56) // int32 | The initial index from which to return the results. (optional)
+    status := []string{"Status_example"} // []string | nieuw = Nieuw, ingediend = Ingediend [ATSP], gms_doorgevoerd = Doorgevoerd [GMS], ingepland = Live test ingepland [ATSP], goedgekeurd = Goedgekeurd [AMS-Servicedesk], geannuleerd = Geannuleerd, gms_verwijderd = Latende aansluiting verwijderd [GMS] (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.MigratieApi.ZakenMigratieList(context.Background()).Gesloten(gesloten).Limit(limit).Offset(offset).Status(status).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `MigratieApi.ZakenMigratieList``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenMigratieList`: PaginatedMigratieZaakList
+    fmt.Fprintf(os.Stdout, "Response from `MigratieApi.ZakenMigratieList`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiZakenMigratieListRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
- **optional** | ***ZakenMigratieListOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-
-Optional parameters are passed through a pointer to a ZakenMigratieListOpts struct
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **gesloten** | **optional.Bool**|  | 
- **limit** | **optional.Int32**| Number of results to return per page. | 
- **offset** | **optional.Int32**| The initial index from which to return the results. | 
- **status** | **optional.String**| nieuw &#x3D; Nieuw, ingediend &#x3D; Ingediend [ATSP], ingepland &#x3D; Live test ingepland [ATSP], gms_doorgevoerd &#x3D; Doorgevoerd [GMS], goedgekeurd &#x3D; Goedgekeurd [AMS-Servicedesk], geannuleerd &#x3D; Geannuleerd, gms_verwijderd &#x3D; Latende aansluiting verwijderd [GMS] | 
+ **gesloten** | **bool** |  | 
+ **limit** | **int32** | Number of results to return per page. | 
+ **offset** | **int32** | The initial index from which to return the results. | 
+ **status** | **[]string** | nieuw &#x3D; Nieuw, ingediend &#x3D; Ingediend [ATSP], gms_doorgevoerd &#x3D; Doorgevoerd [GMS], ingepland &#x3D; Live test ingepland [ATSP], goedgekeurd &#x3D; Goedgekeurd [AMS-Servicedesk], geannuleerd &#x3D; Geannuleerd, gms_verwijderd &#x3D; Latende aansluiting verwijderd [GMS] | 
 
 ### Return type
 
@@ -205,17 +369,53 @@ Name | Type | Description  | Notes
 
 ## ZakenMigratieRetrieve
 
-> MigratieZaak ZakenMigratieRetrieve(ctx, id)
+> MigratieZaak ZakenMigratieRetrieve(ctx, id).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.MigratieApi.ZakenMigratieRetrieve(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `MigratieApi.ZakenMigratieRetrieve``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenMigratieRetrieve`: MigratieZaak
+    fmt.Fprintf(os.Stdout, "Response from `MigratieApi.ZakenMigratieRetrieve`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiZakenMigratieRetrieveRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 

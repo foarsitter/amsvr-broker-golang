@@ -16,32 +16,61 @@ Method | HTTP request | Description
 
 ## BrandweerGemeentesList
 
-> PaginatedGemeenteList BrandweerGemeentesList(ctx, optional)
+> PaginatedGemeenteList BrandweerGemeentesList(ctx).Afkorting(afkorting).Limit(limit).Naam(naam).Offset(offset).Plaatsen(plaatsen).ProvincieAfkorting(provincieAfkorting).Regio(regio).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    afkorting := "afkorting_example" // string |  (optional)
+    limit := int32(56) // int32 | Number of results to return per page. (optional)
+    naam := "naam_example" // string |  (optional)
+    offset := int32(56) // int32 | The initial index from which to return the results. (optional)
+    plaatsen := "plaatsen_example" // string |  (optional)
+    provincieAfkorting := "provincieAfkorting_example" // string |  (optional)
+    regio := int32(56) // int32 |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.BrandweerApi.BrandweerGemeentesList(context.Background()).Afkorting(afkorting).Limit(limit).Naam(naam).Offset(offset).Plaatsen(plaatsen).ProvincieAfkorting(provincieAfkorting).Regio(regio).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `BrandweerApi.BrandweerGemeentesList``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `BrandweerGemeentesList`: PaginatedGemeenteList
+    fmt.Fprintf(os.Stdout, "Response from `BrandweerApi.BrandweerGemeentesList`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiBrandweerGemeentesListRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
- **optional** | ***BrandweerGemeentesListOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-
-Optional parameters are passed through a pointer to a BrandweerGemeentesListOpts struct
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **afkorting** | **optional.String**|  | 
- **limit** | **optional.Int32**| Number of results to return per page. | 
- **naam** | **optional.String**|  | 
- **offset** | **optional.Int32**| The initial index from which to return the results. | 
- **plaatsen** | **optional.String**|  | 
- **provincieAfkorting** | **optional.String**|  | 
- **regio** | **optional.Int32**|  | 
+ **afkorting** | **string** |  | 
+ **limit** | **int32** | Number of results to return per page. | 
+ **naam** | **string** |  | 
+ **offset** | **int32** | The initial index from which to return the results. | 
+ **plaatsen** | **string** |  | 
+ **provincieAfkorting** | **string** |  | 
+ **regio** | **int32** |  | 
 
 ### Return type
 
@@ -63,17 +92,53 @@ Name | Type | Description  | Notes
 
 ## BrandweerGemeentesRetrieve
 
-> Gemeente BrandweerGemeentesRetrieve(ctx, id)
+> Gemeente BrandweerGemeentesRetrieve(ctx, id).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.BrandweerApi.BrandweerGemeentesRetrieve(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `BrandweerApi.BrandweerGemeentesRetrieve``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `BrandweerGemeentesRetrieve`: Gemeente
+    fmt.Fprintf(os.Stdout, "Response from `BrandweerApi.BrandweerGemeentesRetrieve`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiBrandweerGemeentesRetrieveRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -95,29 +160,57 @@ Name | Type | Description  | Notes
 
 ## BrandweerMeldkamersCriteriaList
 
-> PaginatedCriteriumList BrandweerMeldkamersCriteriaList(ctx, id, optional)
+> PaginatedCriteriumList BrandweerMeldkamersCriteriaList(ctx, id).Limit(limit).Offset(offset).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    limit := int32(56) // int32 | Number of results to return per page. (optional)
+    offset := int32(56) // int32 | The initial index from which to return the results. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.BrandweerApi.BrandweerMeldkamersCriteriaList(context.Background(), id).Limit(limit).Offset(offset).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `BrandweerApi.BrandweerMeldkamersCriteriaList``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `BrandweerMeldkamersCriteriaList`: PaginatedCriteriumList
+    fmt.Fprintf(os.Stdout, "Response from `BrandweerApi.BrandweerMeldkamersCriteriaList`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
- **optional** | ***BrandweerMeldkamersCriteriaListOpts** | optional parameters | nil if no parameters
+**id** | **int32** |  | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a BrandweerMeldkamersCriteriaListOpts struct
+Other parameters are passed through a pointer to a apiBrandweerMeldkamersCriteriaListRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **limit** | **optional.Int32**| Number of results to return per page. | 
- **offset** | **optional.Int32**| The initial index from which to return the results. | 
+ **limit** | **int32** | Number of results to return per page. | 
+ **offset** | **int32** | The initial index from which to return the results. | 
 
 ### Return type
 
@@ -139,27 +232,51 @@ Name | Type | Description  | Notes
 
 ## BrandweerMeldkamersList
 
-> PaginatedMeldkamerList BrandweerMeldkamersList(ctx, optional)
+> PaginatedMeldkamerList BrandweerMeldkamersList(ctx).Limit(limit).Offset(offset).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    limit := int32(56) // int32 | Number of results to return per page. (optional)
+    offset := int32(56) // int32 | The initial index from which to return the results. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.BrandweerApi.BrandweerMeldkamersList(context.Background()).Limit(limit).Offset(offset).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `BrandweerApi.BrandweerMeldkamersList``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `BrandweerMeldkamersList`: PaginatedMeldkamerList
+    fmt.Fprintf(os.Stdout, "Response from `BrandweerApi.BrandweerMeldkamersList`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiBrandweerMeldkamersListRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
- **optional** | ***BrandweerMeldkamersListOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-
-Optional parameters are passed through a pointer to a BrandweerMeldkamersListOpts struct
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **limit** | **optional.Int32**| Number of results to return per page. | 
- **offset** | **optional.Int32**| The initial index from which to return the results. | 
+ **limit** | **int32** | Number of results to return per page. | 
+ **offset** | **int32** | The initial index from which to return the results. | 
 
 ### Return type
 
@@ -181,17 +298,53 @@ Name | Type | Description  | Notes
 
 ## BrandweerMeldkamersRetrieve
 
-> Meldkamer BrandweerMeldkamersRetrieve(ctx, id)
+> Meldkamer BrandweerMeldkamersRetrieve(ctx, id).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.BrandweerApi.BrandweerMeldkamersRetrieve(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `BrandweerApi.BrandweerMeldkamersRetrieve``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `BrandweerMeldkamersRetrieve`: Meldkamer
+    fmt.Fprintf(os.Stdout, "Response from `BrandweerApi.BrandweerMeldkamersRetrieve`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiBrandweerMeldkamersRetrieveRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -213,29 +366,55 @@ Name | Type | Description  | Notes
 
 ## BrandweerRegiosList
 
-> PaginatedRegioList BrandweerRegiosList(ctx, optional)
+> PaginatedRegioList BrandweerRegiosList(ctx).Limit(limit).Meldkamer(meldkamer).Naam(naam).Offset(offset).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    limit := int32(56) // int32 | Number of results to return per page. (optional)
+    meldkamer := int32(56) // int32 |  (optional)
+    naam := "naam_example" // string |  (optional)
+    offset := int32(56) // int32 | The initial index from which to return the results. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.BrandweerApi.BrandweerRegiosList(context.Background()).Limit(limit).Meldkamer(meldkamer).Naam(naam).Offset(offset).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `BrandweerApi.BrandweerRegiosList``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `BrandweerRegiosList`: PaginatedRegioList
+    fmt.Fprintf(os.Stdout, "Response from `BrandweerApi.BrandweerRegiosList`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiBrandweerRegiosListRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
- **optional** | ***BrandweerRegiosListOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-
-Optional parameters are passed through a pointer to a BrandweerRegiosListOpts struct
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **limit** | **optional.Int32**| Number of results to return per page. | 
- **meldkamer** | **optional.Int32**|  | 
- **naam** | **optional.String**|  | 
- **offset** | **optional.Int32**| The initial index from which to return the results. | 
+ **limit** | **int32** | Number of results to return per page. | 
+ **meldkamer** | **int32** |  | 
+ **naam** | **string** |  | 
+ **offset** | **int32** | The initial index from which to return the results. | 
 
 ### Return type
 
@@ -257,17 +436,53 @@ Name | Type | Description  | Notes
 
 ## BrandweerRegiosRetrieve
 
-> Regio BrandweerRegiosRetrieve(ctx, id)
+> Regio BrandweerRegiosRetrieve(ctx, id).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.BrandweerApi.BrandweerRegiosRetrieve(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `BrandweerApi.BrandweerRegiosRetrieve``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `BrandweerRegiosRetrieve`: Regio
+    fmt.Fprintf(os.Stdout, "Response from `BrandweerApi.BrandweerRegiosRetrieve`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiBrandweerRegiosRetrieveRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 

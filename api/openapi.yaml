@@ -7,7 +7,7 @@ info:
     \ beschikbaar\nin de op endpoint niveau zoals bijvoorbeeld [hier](/api/aansluitingen).\n\
     \n##\n\n\n\n    "
   title: AMSVR Broker API
-  version: release-0.6.0.24
+  version: release-0.6.14
 externalDocs:
   description: Swagger UI
   url: /swagger-ui
@@ -82,8 +82,8 @@ paths:
           - Gelijkwaardige veiligheid (sprinkler) doormelden via PAC mogelijk
           - Gezondheidszorgfunctie met bedgebied
           - Groepszorgwoning voor 24-uurs zorg
-          - Kinderopvang voor kinderen < 4 jaar met vloerhoogte > 1,5 m1 (6 bedjes)
-          - Logiesgebouw zonder 24-uursbewaking met vloerhoogte > 1,5 m1
+          - "Kinderopvang voor kinderen < 4 jaar met vloerhoogte > 1,5 m1 (6 bedjes)"
+          - "Logiesgebouw zonder 24-uursbewaking met vloerhoogte > 1,5 m1"
           - O.b.v. lokale bestuurlijke afspraken/wensen
           - O.b.v. lokale leiding brandweerzorg
           - Zorgclusterwoning voor 24-uurs zorg in een woongebouw
@@ -183,31 +183,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedAansluitingList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
       tags:
       - aansluitingen
     post:
-      description: |2
-
-        # Gegevensvalidatie adressering
-        Om te voorkomen dat er fouten ontstaan in de adressering van aansluitingen worden adressen gevalideerd in de BAG.
-        Hiervoor wordt de API Locatieserver van PDOK gebruikt. Deze dienst is vrijelijk
-        te gebruiken: https://github.com/PDOK/locatieserver/wiki/API-Locatieserver
-
-        Er zijn drie verschillende wegen om een aansluiting correct toe te voegen.
-
-        1. Lookup met bag_lookup_id: via deze methode is het mogelijk om zelf suggesties op te vragen bij de PDOK Locatieserver.
-        Vervolgens halen wij aan onze kant de gevens uit de BAG. Meegestuurde waarden worden voor
-         bijvoorbeeld huisnummer worden genegeerd.
-
-        2. Suggest via Postcode en huisnummer (en optioneel straat, huisletter en toevoeging):
-        via deze methode proberen wij te matchen met de BAG.
-        Als er een match wordt gevonden dan worden de gevens uit BAG als leidend beschouwd.
-
-        3. bag_niet_beschikbaar = True: hierbij wordt een motivatie verwacht in het bag_comment veld. Deze is verplicht.
-        Adresvelden worden via deze weg niet gevalideerd. Wel is het noodzakelijk om de juiste gemeente op te geven.
+      description: "\n# Gegevensvalidatie adressering\nOm te voorkomen dat er fouten\
+        \ ontstaan in de adressering van aansluitingen worden adressen gevalideerd\
+        \ in de BAG.\nHiervoor wordt de API Locatieserver van PDOK gebruikt. Deze\
+        \ dienst is vrijelijk\nte gebruiken: https://github.com/PDOK/locatieserver/wiki/API-Locatieserver\n\
+        \nEr zijn drie verschillende wegen om een aansluiting correct toe te voegen.\n\
+        \n1. Lookup met bag_lookup_id: via deze methode is het mogelijk om zelf suggesties\
+        \ op te vragen bij de PDOK Locatieserver.\nVervolgens halen wij aan onze kant\
+        \ de gevens uit de BAG. Meegestuurde waarden worden voor\n bijvoorbeeld huisnummer\
+        \ worden genegeerd.\n\n2. Suggest via Postcode en huisnummer (en optioneel\
+        \ straat, huisletter en toevoeging):\nvia deze methode proberen wij te matchen\
+        \ met de BAG.\nAls er een match wordt gevonden dan worden de gevens uit BAG\
+        \ als leidend beschouwd.\n\n3. bag_niet_beschikbaar = True: hierbij wordt\
+        \ een motivatie verwacht in het bag_comment veld. Deze is verplicht.\nAdresvelden\
+        \ worden via deze weg niet gevalideerd. Wel is het noodzakelijk om de juiste\
+        \ gemeente op te geven.\n"
       operationId: aansluitingen_create
       requestBody:
         content:
@@ -227,6 +224,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Aansluiting'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -267,6 +265,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Aansluiting'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -300,6 +299,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Aansluiting'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -338,6 +338,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedAansluitingBestandList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -370,6 +371,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AansluitingBestand'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -408,6 +410,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedContactPersoonList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -441,6 +444,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ContactPersoon'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -463,6 +467,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Zaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -501,6 +506,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedMeldingList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -534,6 +540,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Melding'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -571,6 +578,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Aansluiting'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -609,6 +617,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedSectorList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -642,6 +651,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Sector'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -671,6 +681,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Sector'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -678,7 +689,7 @@ paths:
       - aansluitingen
   /api/aansluitingen/{aansluitnummer}/sectoren/{nummer}/toestand:
     patch:
-      operationId: aansluitingen_sectoren_toestand_partial_update
+      operationId: aansluitingen_sectoren_toestand_partial_update_2
       parameters:
       - explode: false
         in: path
@@ -711,6 +722,41 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SectorToestand'
+          description: ""
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - aansluitingen
+  /api/aansluitingen/{aansluitnummer}/sectoren/toestand:
+    patch:
+      operationId: aansluitingen_sectoren_toestand_partial_update
+      parameters:
+      - explode: false
+        in: path
+        name: aansluitnummer
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSectorToestandRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSectorToestandRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSectorToestandRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SectorToestand'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -744,6 +790,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AansluitingToestand'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -766,6 +813,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Transition'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -798,6 +846,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Aansluiting'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -820,6 +869,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ValidationObject'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -860,6 +910,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AanwezigCriterium'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -892,6 +943,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AanwezigCriterium'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -925,6 +977,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AanwezigCriterium'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -965,6 +1018,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AansluitingBestand'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -997,6 +1051,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AansluitingBestand'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1029,6 +1084,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AansluitingBestand'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1099,6 +1155,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedContactPersoonList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1139,6 +1196,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ContactPersoon'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1171,6 +1229,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ContactPersoon'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1204,6 +1263,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ContactPersoon'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1242,6 +1302,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedTelefoonnummerList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1275,6 +1336,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Telefoonnummer'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1289,6 +1351,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Search'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1351,6 +1414,13 @@ paths:
         schema:
           type: string
         style: form
+      - explode: true
+        in: query
+        name: nummer
+        required: false
+        schema:
+          type: integer
+        style: form
       - description: The initial index from which to return the results.
         explode: true
         in: query
@@ -1373,6 +1443,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedSectorList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1413,6 +1484,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Sector'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1432,20 +1504,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SectorRequest'
+              $ref: '#/components/schemas/SectorWriteRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/SectorRequest'
+              $ref: '#/components/schemas/SectorWriteRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/SectorRequest'
+              $ref: '#/components/schemas/SectorWriteRequest'
         required: true
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Sector'
+                $ref: '#/components/schemas/SectorWrite'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1484,6 +1557,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedAanwezigCriteriumList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1517,6 +1591,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AanwezigCriterium'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1550,6 +1625,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SectorToestand'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1590,6 +1666,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedWaarschuwingsadresList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1624,6 +1701,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Waarschuwingsadres'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1664,6 +1742,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Telefoonnummer'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1696,6 +1775,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Telefoonnummer'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1729,6 +1809,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Telefoonnummer'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1769,6 +1850,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Waarschuwingsadres'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1801,6 +1883,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Waarschuwingsadres'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1834,6 +1917,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Waarschuwingsadres'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1881,6 +1965,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedAfspraakList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1903,6 +1988,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Afspraak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1935,6 +2021,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Afspraak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1968,6 +2055,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Afspraak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -1988,19 +2076,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AfspraakVerplaatsenRequest'
+              $ref: '#/components/schemas/AfspraakCreateRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AfspraakVerplaatsenRequest'
+              $ref: '#/components/schemas/AfspraakCreateRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AfspraakVerplaatsenRequest'
+              $ref: '#/components/schemas/AfspraakCreateRequest'
+        required: true
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AfspraakVerplaatsen'
+                $ref: '#/components/schemas/AfspraakCreate'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2024,6 +2114,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Bookabledays'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2054,6 +2145,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BookableTimes'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2088,6 +2180,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Afspraak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2119,6 +2212,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedATSPList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2185,6 +2279,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedGemeenteList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2207,6 +2302,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Gemeente'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2238,6 +2334,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedMeldkamerList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2260,6 +2357,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Meldkamer'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2298,6 +2396,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedCriteriumList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2343,6 +2442,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedRegioList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2365,6 +2465,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Regio'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2436,7 +2537,7 @@ paths:
         schema:
           type: integer
         style: form
-      - description: 0 = Actief, 1 = test, 2 = Passief
+      - description: "0 = Actief, 1 = Test, 2 = Passief"
         explode: true
         in: query
         name: toestand
@@ -2454,11 +2555,87 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedMeldingList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
       tags:
       - meldingen
+  /api/zaken/{id}/afspraken:
+    get:
+      description: Provide the ability to retrieve a single object for further manipulation.
+      operationId: zaken_afspraken_list
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Number of results to return per page.
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The initial index from which to return the results.
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAfspraakCreateList'
+          description: ""
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - zaken
+    post:
+      description: Provide the ability to retrieve a single object for further manipulation.
+      operationId: zaken_afspraken_create
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AfspraakCreateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AfspraakCreateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AfspraakCreateRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AfspraakCreate'
+          description: ""
+      security:
+      - ApiKeyAuth: []
+      - cookieAuth: []
+      tags:
+      - zaken
   /api/zaken/afsluiting/:
     get:
       operationId: zaken_afsluiting_list
@@ -2486,24 +2663,27 @@ paths:
         schema:
           type: integer
         style: form
-      - description: nieuw = Afsluiting, ingediend = Ingediend [ATSP], afgewezen =
-          Afgewezen [Risicobeheer], goedgekeurd = Goedgekeurd [Risicobeheer], bevestigd
-          = Bevestigd [ATSP], uitgevoerd = Uitgevoerd [AMS-Servicedesk], geannuleerd
-          = Geannuleerd
+      - description: "nieuw = Afsluiting, ingediend = Ingediend [ATSP], afgewezen\
+          \ = Afgewezen [Risicobeheer], goedgekeurd = Goedgekeurd [Risicobeheer],\
+          \ bevestigd = Bevestigd [ATSP], uitgevoerd = Uitgevoerd [AMS-Servicedesk],\
+          \ verwijderd = Verwijderd [GMS], geannuleerd = Geannuleerd"
         explode: true
         in: query
         name: status
         required: false
         schema:
-          enum:
-          - afgewezen
-          - bevestigd
-          - geannuleerd
-          - goedgekeurd
-          - ingediend
-          - nieuw
-          - uitgevoerd
-          type: string
+          items:
+            enum:
+            - afgewezen
+            - bevestigd
+            - geannuleerd
+            - goedgekeurd
+            - ingediend
+            - nieuw
+            - uitgevoerd
+            - verwijderd
+            type: string
+          type: array
         style: form
       responses:
         "200":
@@ -2511,6 +2691,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedAfsluitingZaakList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2533,6 +2714,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AfsluitingZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2566,6 +2748,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AfsluitingZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2600,6 +2783,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AfsluitingZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2634,6 +2818,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AfsluitingZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2668,6 +2853,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AfsluitingZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2702,6 +2888,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AfsluitingZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2728,6 +2915,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AfsluitingZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2760,22 +2948,24 @@ paths:
         schema:
           type: integer
         style: form
-      - description: nieuw = Nieuw, ingediend = Ingediend [ATSP], ingepland = Live
-          test ingepland [ATSP], goedgekeurd = Goedgekeurd [AMS-Servicedesk], doorgevoerd
-          = Doorgevoerd [GMS], geannuleerd = Geannuleerd
+      - description: "nieuw = Nieuw, ingediend = Ingediend [ATSP], goedgekeurd = Goedgekeurd\
+          \ [AMS-Servicedesk], ingepland = Live test ingepland [ATSP], doorgevoerd\
+          \ = Doorgevoerd [GMS], geannuleerd = Geannuleerd"
         explode: true
         in: query
         name: status
         required: false
         schema:
-          enum:
-          - doorgevoerd
-          - geannuleerd
-          - goedgekeurd
-          - ingediend
-          - ingepland
-          - nieuw
-          type: string
+          items:
+            enum:
+            - doorgevoerd
+            - geannuleerd
+            - goedgekeurd
+            - ingediend
+            - ingepland
+            - nieuw
+            type: string
+          type: array
         style: form
       responses:
         "200":
@@ -2783,6 +2973,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedKiezerVervangenZaakList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2817,6 +3008,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/KiezerVervangenZaakIndienen'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2839,6 +3031,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/KiezerVervangenZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2873,6 +3066,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/KiezerVervangenZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2907,6 +3101,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/KiezerVervangenZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2940,6 +3135,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/KiezerVervangenZaakInplannen'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -2974,24 +3170,26 @@ paths:
         schema:
           type: integer
         style: form
-      - description: nieuw = Nieuw, ingediend = Ingediend [ATSP], ingepland = Live
-          test ingepland [ATSP], gms_doorgevoerd = Doorgevoerd [GMS], goedgekeurd
-          = Goedgekeurd [AMS-Servicedesk], geannuleerd = Geannuleerd, gms_verwijderd
-          = Latende aansluiting verwijderd [GMS]
+      - description: "nieuw = Nieuw, ingediend = Ingediend [ATSP], gms_doorgevoerd\
+          \ = Doorgevoerd [GMS], ingepland = Live test ingepland [ATSP], goedgekeurd\
+          \ = Goedgekeurd [AMS-Servicedesk], geannuleerd = Geannuleerd, gms_verwijderd\
+          \ = Latende aansluiting verwijderd [GMS]"
         explode: true
         in: query
         name: status
         required: false
         schema:
-          enum:
-          - geannuleerd
-          - gms_doorgevoerd
-          - gms_verwijderd
-          - goedgekeurd
-          - ingediend
-          - ingepland
-          - nieuw
-          type: string
+          items:
+            enum:
+            - geannuleerd
+            - gms_doorgevoerd
+            - gms_verwijderd
+            - goedgekeurd
+            - ingediend
+            - ingepland
+            - nieuw
+            type: string
+          type: array
         style: form
       responses:
         "200":
@@ -2999,6 +3197,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedMigratieZaakList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3036,6 +3235,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Aansluiting'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3058,6 +3258,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MigratieZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3092,6 +3293,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MigratieZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3126,6 +3328,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MigratieZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3159,6 +3362,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MigratieZaakLiveTestInplannen'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3191,29 +3395,31 @@ paths:
         schema:
           type: integer
         style: form
-      - description: mutatie = Mutatie, ingediend = Ingediend [ATSP], afgewezen =
-          Afgewezen [Risicobeheer], goedgekeurd = Goedgekeurd [Risicobeheer], aangepast_broker
-          = Aangepast in de Broker [ATSP], gms_toegevoegd = Toevoegingen doorgevoerd
-          in het GMS [GMS], ingepland = Live test ingepland [ATSP], aanpassingen_geverifieerd
-          = Live test goedgekeurd [AMS-Servicedesk], gms_verwijderd = Criteria verwijderd
-          in het GMS [AMS-Servicedesk], geannuleerd = Geannuleerd
+      - description: "mutatie = Mutatie, ingediend = Ingediend [ATSP], afgewezen =\
+          \ Afgewezen [Risicobeheer], goedgekeurd = Goedgekeurd [Risicobeheer], aangepast_broker\
+          \ = Aangepast in de Broker [ATSP], gms_toegevoegd = Toevoegingen doorgevoerd\
+          \ in het GMS [GMS], ingepland = Live test ingepland [ATSP], aanpassingen_geverifieerd\
+          \ = Aanpassingen goedgekeurd [AMS-Servicedesk], gms_verwijderd = Criteria\
+          \ verwijderd in het GMS [AMS-Servicedesk], geannuleerd = Geannuleerd"
         explode: true
         in: query
         name: status
         required: false
         schema:
-          enum:
-          - aangepast_broker
-          - aanpassingen_geverifieerd
-          - afgewezen
-          - geannuleerd
-          - gms_toegevoegd
-          - gms_verwijderd
-          - goedgekeurd
-          - ingediend
-          - ingepland
-          - mutatie
-          type: string
+          items:
+            enum:
+            - aangepast_broker
+            - aanpassingen_geverifieerd
+            - afgewezen
+            - geannuleerd
+            - gms_toegevoegd
+            - gms_verwijderd
+            - goedgekeurd
+            - ingediend
+            - ingepland
+            - mutatie
+            type: string
+          type: array
         style: form
       - explode: true
         in: query
@@ -3231,6 +3437,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedMutatieZaakList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3253,6 +3460,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MutatieZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3286,6 +3494,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MutatieZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3319,6 +3528,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MutatieZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3352,6 +3562,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MutatieZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3385,6 +3596,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MutatieZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3418,6 +3630,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MutatieZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3451,6 +3664,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MutatieZaakAangepastInDeBroker'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3484,6 +3698,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MutatieZaakAangepastInDeBroker'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3510,6 +3725,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MutatieZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3542,27 +3758,29 @@ paths:
         schema:
           type: integer
         style: form
-      - description: nieuw = Nieuw, ingediend = Ingediend ter aanvraag [ATSP], afgekeurd
-          = Aanvraag afgekeurd [Risicobeheer], realisatie = Aanvraag goedgekeurd [Risicobeheer],
-          gms_doorgevoerd = Doorgevoerd [GMS], technisch_gereed = Live test inplannen
-          [ATSP], goedgekeurd = Goedgekeurd [AMS-Servicedesk], opgeleverd = Actief
-          gezet [Risicobeheer], geannuleerd = Geannuleerd
+      - description: "nieuw = Nieuw, ingediend = Ingediend ter aanvraag [ATSP], afgekeurd\
+          \ = Aanvraag afgekeurd [Risicobeheer], realisatie = Aanvraag goedgekeurd\
+          \ [Risicobeheer], gms_doorgevoerd = Doorgevoerd [GMS], technisch_gereed\
+          \ = Live test ingepland [ATSP], goedgekeurd = Goedgekeurd [AMS-Servicedesk],\
+          \ opgeleverd = Actief gezet [Risicobeheer], geannuleerd = Geannuleerd"
         explode: true
         in: query
         name: status
         required: false
         schema:
-          enum:
-          - afgekeurd
-          - geannuleerd
-          - gms_doorgevoerd
-          - goedgekeurd
-          - ingediend
-          - nieuw
-          - opgeleverd
-          - realisatie
-          - technisch_gereed
-          type: string
+          items:
+            enum:
+            - afgekeurd
+            - geannuleerd
+            - gms_doorgevoerd
+            - goedgekeurd
+            - ingediend
+            - nieuw
+            - opgeleverd
+            - realisatie
+            - technisch_gereed
+            type: string
+          type: array
         style: form
       responses:
         "200":
@@ -3570,6 +3788,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PaginatedNieuweAansluitingZaakList'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3592,6 +3811,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NieuweAansluitingZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3626,6 +3846,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NieuweAansluitingZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3660,6 +3881,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NieuweAansluitingZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3694,6 +3916,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NieuweAansluitingZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3728,6 +3951,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NieuweAansluitingZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3761,6 +3985,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NieuweAansluitingZaakLiveTest'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3795,6 +4020,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NieuweAansluitingZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3828,6 +4054,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NieuweAansluitingZaakLiveTest'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3862,6 +4089,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NieuweAansluitingZaak'
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -3869,11 +4097,8 @@ paths:
       - nieuwe aansluiting
   /schema.json:
     get:
-      description: |-
-        OpenApi3 schema for this API. Format can be selected via content negotiation.
-
-        - YAML: application/vnd.oai.openapi
-        - JSON: application/vnd.oai.openapi+json
+      description: "OpenApi3 schema for this API. Format can be selected via content\
+        \ negotiation.\n\n- YAML: application/vnd.oai.openapi\n- JSON: application/vnd.oai.openapi+json"
       operationId: schema.json_retrieve
       parameters:
       - explode: true
@@ -3991,6 +4216,7 @@ paths:
               schema:
                 additionalProperties: {}
                 type: object
+          description: ""
       security:
       - ApiKeyAuth: []
       - cookieAuth: []
@@ -4059,11 +4285,11 @@ components:
         status:
           allOf:
           - $ref: '#/components/schemas/AansluitingStatusEnum'
-          description: 0 = Nieuw, 10 = Ingediend ter aanvraag [ATSP], 20 = Aanvraag
-            afgekeurd [Risicobeheer], 30 = Aanvraag goedgekeurd [Risicobeheer], 50
-            = Live test ingepland [ATSP], 55 = Goedgekeurd [AMS-servicedesk], 60 =
-            Actief gezet [Risicobeheer], 5 = Migratie gestart [ATSP], 61 = Migratie
-            goedgekeurd [AMS-Servicedesk]
+          description: "0 = Nieuw, 10 = Ingediend ter aanvraag [ATSP], 20 = Aanvraag\
+            \ afgekeurd [Risicobeheer], 30 = Aanvraag goedgekeurd [Risicobeheer],\
+            \ 50 = Live test ingepland [ATSP], 55 = Goedgekeurd [AMS-servicedesk],\
+            \ 60 = Actief gezet [Risicobeheer], 5 = Migratie gestart [ATSP], 61 =\
+            \ Migratie goedgekeurd [AMS-Servicedesk]"
           readOnly: true
           title: Status van de aanvraag
         atsp:
@@ -4101,7 +4327,7 @@ components:
         toestand:
           allOf:
           - $ref: '#/components/schemas/MeldingStatus'
-          description: 0 = Passief, 1 = Actief
+          description: "0 = Passief, 1 = Actief"
           readOnly: true
         bag_lookup_id:
           maxLength: 100
@@ -4120,14 +4346,14 @@ components:
           description: https://www.kadaster.nl/zakelijk/registraties/basisregistraties/rijksdriehoeksmeting/rijksdriehoeksstelsel
           format: decimal
           nullable: true
-          pattern: ^\d{0,6}(?:\.\d{0,16})?$
+          pattern: "^-?\\d{0,6}(?:\\.\\d{0,16})?$"
           title: X (RD-coördinaten)
           type: string
         rijksdriehoekstel_y:
           description: https://www.kadaster.nl/zakelijk/registraties/basisregistraties/rijksdriehoeksmeting/rijksdriehoeksstelsel
           format: decimal
           nullable: true
-          pattern: ^\d{0,6}(?:\.\d{0,16})?$
+          pattern: "^-?\\d{0,6}(?:\\.\\d{0,16})?$"
           title: Y (RD-coördinaten)
           type: string
         gebruiksfunctie:
@@ -4176,9 +4402,9 @@ components:
         type:
           allOf:
           - $ref: '#/components/schemas/AansluitingBestandTypeEnum'
-          description: overige = Overige, pve = PVE, upd = UPD, nva = NVA (nota van
-            aanvulling), nvw = NVW (nota van wijzigingen), gms_mutatierapport = GMS
-            mutatierapport
+          description: "overige = Overige, pve = PVE, upd = UPD, nva = NVA (nota van\
+            \ aanvulling), nvw = NVW (nota van wijzigingen), gms_mutatierapport =\
+            \ GMS mutatierapport"
         file:
           format: uri
           nullable: true
@@ -4215,9 +4441,9 @@ components:
         type:
           allOf:
           - $ref: '#/components/schemas/AansluitingBestandTypeEnum'
-          description: overige = Overige, pve = PVE, upd = UPD, nva = NVA (nota van
-            aanvulling), nvw = NVW (nota van wijzigingen), gms_mutatierapport = GMS
-            mutatierapport
+          description: "overige = Overige, pve = PVE, upd = UPD, nva = NVA (nota van\
+            \ aanvulling), nvw = NVW (nota van wijzigingen), gms_mutatierapport =\
+            \ GMS mutatierapport"
         file:
           format: binary
           nullable: true
@@ -4298,14 +4524,14 @@ components:
           description: https://www.kadaster.nl/zakelijk/registraties/basisregistraties/rijksdriehoeksmeting/rijksdriehoeksstelsel
           format: decimal
           nullable: true
-          pattern: ^\d{0,6}(?:\.\d{0,16})?$
+          pattern: "^-?\\d{0,6}(?:\\.\\d{0,16})?$"
           title: X (RD-coördinaten)
           type: string
         rijksdriehoekstel_y:
           description: https://www.kadaster.nl/zakelijk/registraties/basisregistraties/rijksdriehoeksmeting/rijksdriehoeksstelsel
           format: decimal
           nullable: true
-          pattern: ^\d{0,6}(?:\.\d{0,16})?$
+          pattern: "^-?\\d{0,6}(?:\\.\\d{0,16})?$"
           title: Y (RD-coördinaten)
           type: string
         gebruiksfunctie:
@@ -4339,7 +4565,7 @@ components:
         toestand:
           allOf:
           - $ref: '#/components/schemas/MeldingStatus'
-          description: 0 = Passief, 1 = Actief
+          description: "0 = Passief, 1 = Actief"
           maximum: 2147483647
           minimum: -2147483648
       type: object
@@ -4362,15 +4588,18 @@ components:
           type: integer
         laatst_gemeld:
           format: date-time
+          nullable: true
           readOnly: true
           type: string
         laatste_toestand:
           allOf:
           - $ref: '#/components/schemas/MeldingToestand'
+          nullable: true
           readOnly: true
         laatste_status:
           allOf:
           - $ref: '#/components/schemas/MeldingStatus'
+          nullable: true
           readOnly: true
       required:
       - criterium
@@ -4416,10 +4645,10 @@ components:
         status:
           allOf:
           - $ref: '#/components/schemas/AfsluitingZaakStatusEnum'
-          description: nieuw = Afsluiting, ingediend = Ingediend [ATSP], afgewezen
-            = Afgewezen [Risicobeheer], goedgekeurd = Goedgekeurd [Risicobeheer],
-            bevestigd = Bevestigd [ATSP], uitgevoerd = Uitgevoerd [AMS-Servicedesk],
-            geannuleerd = Geannuleerd
+          description: "nieuw = Afsluiting, ingediend = Ingediend [ATSP], afgewezen\
+            \ = Afgewezen [Risicobeheer], goedgekeurd = Goedgekeurd [Risicobeheer],\
+            \ bevestigd = Bevestigd [ATSP], uitgevoerd = Uitgevoerd [AMS-Servicedesk],\
+            \ verwijderd = Verwijderd [GMS], geannuleerd = Geannuleerd"
           readOnly: true
         status_changed:
           format: date-time
@@ -4437,12 +4666,14 @@ components:
           title: Laatst aangepast
           type: string
         user:
+          nullable: true
           readOnly: true
           type: integer
         gesloten:
           readOnly: true
           type: boolean
         gesloten_door:
+          nullable: true
           readOnly: true
           type: integer
         reden:
@@ -4458,6 +4689,7 @@ components:
         definitieve_datum:
           description: Wanneer wordt de aansluiting definitief verwijderd?
           format: date
+          nullable: true
           readOnly: true
           type: string
         mogelijke_transities:
@@ -4560,6 +4792,7 @@ components:
       - goedgekeurd
       - bevestigd
       - uitgevoerd
+      - verwijderd
       - geannuleerd
       type: string
     AfsluitingZaakTransitieRequest:
@@ -4634,6 +4867,27 @@ components:
       - title
       - url
       type: object
+    AfspraakCreate:
+      example:
+        id: 0
+      properties:
+        id:
+          readOnly: true
+          type: integer
+      required:
+      - id
+      type: object
+    AfspraakCreateRequest:
+      example:
+        afspraak_tijd: 2000-01-23T04:56:07.000+00:00
+      properties:
+        afspraak_tijd:
+          format: date-time
+          type: string
+          writeOnly: true
+      required:
+      - afspraak_tijd
+      type: object
     AfspraakRequest:
       example:
         titel: titel
@@ -4658,22 +4912,6 @@ components:
       required:
       - start_tijd
       - titel
-      type: object
-    AfspraakVerplaatsen:
-      example:
-        afspraak_tijd: 2000-01-23T04:56:07.000+00:00
-      properties:
-        afspraak_tijd:
-          format: date-time
-          type: string
-      type: object
-    AfspraakVerplaatsenRequest:
-      example:
-        afspraak_tijd: 2000-01-23T04:56:07.000+00:00
-      properties:
-        afspraak_tijd:
-          format: date-time
-          type: string
       type: object
     BookableTimes:
       example:
@@ -4747,6 +4985,7 @@ components:
           type: integer
         voornaam:
           maxLength: 255
+          nullable: true
           type: string
         tussenvoegsel:
           maxLength: 255
@@ -4787,7 +5026,6 @@ components:
       - id
       - modified
       - telefoonnummers
-      - voornaam
       type: object
     ContactPersoonRequest:
       example:
@@ -4799,7 +5037,7 @@ components:
       properties:
         voornaam:
           maxLength: 255
-          minLength: 1
+          nullable: true
           type: string
         tussenvoegsel:
           maxLength: 255
@@ -4822,7 +5060,6 @@ components:
           type: string
       required:
       - achternaam
-      - voornaam
       type: object
     Criterium:
       example:
@@ -4848,9 +5085,9 @@ components:
       enum:
       - Gezondheidszorgfunctie met bedgebied
       - Groepszorgwoning voor 24-uurs zorg
-      - Logiesgebouw zonder 24-uursbewaking met vloerhoogte > 1,5 m1
+      - "Logiesgebouw zonder 24-uursbewaking met vloerhoogte > 1,5 m1"
       - Zorgclusterwoning voor 24-uurs zorg in een woongebouw
-      - Kinderopvang voor kinderen < 4 jaar met vloerhoogte > 1,5 m1 (6 bedjes)
+      - "Kinderopvang voor kinderen < 4 jaar met vloerhoogte > 1,5 m1 (6 bedjes)"
       - Celfunctie
       - Gelijkwaardige veiligheid (BHVB) doormelden via PAC mogelijk
       - Gelijkwaardige veiligheid (sprinkler) doormelden via PAC mogelijk
@@ -4909,9 +5146,9 @@ components:
         status:
           allOf:
           - $ref: '#/components/schemas/KiezerVervangenZaakIndienenStatusEnum'
-          description: nieuw = Nieuw, ingediend = Ingediend [ATSP], ingepland = Live
-            test ingepland [ATSP], goedgekeurd = Goedgekeurd [AMS-Servicedesk], doorgevoerd
-            = Doorgevoerd [GMS], geannuleerd = Geannuleerd
+          description: "nieuw = Nieuw, ingediend = Ingediend [ATSP], goedgekeurd =\
+            \ Goedgekeurd [AMS-Servicedesk], ingepland = Live test ingepland [ATSP],\
+            \ doorgevoerd = Doorgevoerd [GMS], geannuleerd = Geannuleerd"
           readOnly: true
         status_changed:
           format: date-time
@@ -4929,12 +5166,14 @@ components:
           title: Laatst aangepast
           type: string
         user:
+          nullable: true
           readOnly: true
           type: integer
         gesloten:
           readOnly: true
           type: boolean
         gesloten_door:
+          nullable: true
           readOnly: true
           type: integer
         mogelijke_transities:
@@ -4967,8 +5206,8 @@ components:
       enum:
       - nieuw
       - ingediend
-      - ingepland
       - goedgekeurd
+      - ingepland
       - doorgevoerd
       - geannuleerd
       type: string
@@ -5039,13 +5278,13 @@ components:
         status:
           allOf:
           - $ref: '#/components/schemas/MeldingStatus'
-          description: 0 = Rust, 1 = Alarm
+          description: "0 = Rust, 1 = Alarm"
           maximum: 2147483647
           minimum: -2147483648
         toestand:
           allOf:
           - $ref: '#/components/schemas/MeldingToestand'
-          description: 0 = Actief, 1 = test, 2 = Passief
+          description: "0 = Actief, 1 = Test, 2 = Passief"
           maximum: 2147483647
           minimum: -2147483648
         data:
@@ -5105,13 +5344,13 @@ components:
         status:
           allOf:
           - $ref: '#/components/schemas/MeldingStatus'
-          description: 0 = Rust, 1 = Alarm
+          description: "0 = Rust, 1 = Alarm"
           maximum: 2147483647
           minimum: -2147483648
         toestand:
           allOf:
           - $ref: '#/components/schemas/MeldingToestand'
-          description: 0 = Actief, 1 = test, 2 = Passief
+          description: "0 = Actief, 1 = Test, 2 = Passief"
           maximum: 2147483647
           minimum: -2147483648
         data:
@@ -5230,10 +5469,10 @@ components:
         status:
           allOf:
           - $ref: '#/components/schemas/MigratieZaakStatusEnum'
-          description: nieuw = Nieuw, ingediend = Ingediend [ATSP], ingepland = Live
-            test ingepland [ATSP], gms_doorgevoerd = Doorgevoerd [GMS], goedgekeurd
-            = Goedgekeurd [AMS-Servicedesk], geannuleerd = Geannuleerd, gms_verwijderd
-            = Latende aansluiting verwijderd [GMS]
+          description: "nieuw = Nieuw, ingediend = Ingediend [ATSP], gms_doorgevoerd\
+            \ = Doorgevoerd [GMS], ingepland = Live test ingepland [ATSP], goedgekeurd\
+            \ = Goedgekeurd [AMS-Servicedesk], geannuleerd = Geannuleerd, gms_verwijderd\
+            \ = Latende aansluiting verwijderd [GMS]"
           readOnly: true
         status_changed:
           format: date-time
@@ -5251,12 +5490,14 @@ components:
           title: Laatst aangepast
           type: string
         user:
+          nullable: true
           readOnly: true
           type: integer
         gesloten:
           readOnly: true
           type: boolean
         gesloten_door:
+          nullable: true
           readOnly: true
           type: integer
         mogelijke_transities:
@@ -5302,8 +5543,8 @@ components:
       enum:
       - nieuw
       - ingediend
-      - ingepland
       - gms_doorgevoerd
+      - ingepland
       - goedgekeurd
       - geannuleerd
       - gms_verwijderd
@@ -5322,6 +5563,7 @@ components:
       example:
         created: 2000-01-23T04:56:07.000+00:00
         gesloten_door: 5
+        type: null
         mogelijke_transities:
         - mogelijke_transities
         - mogelijke_transities
@@ -5344,12 +5586,13 @@ components:
         status:
           allOf:
           - $ref: '#/components/schemas/MutatieZaakStatusEnum'
-          description: mutatie = Mutatie, ingediend = Ingediend [ATSP], afgewezen
-            = Afgewezen [Risicobeheer], goedgekeurd = Goedgekeurd [Risicobeheer],
-            aangepast_broker = Aangepast in de Broker [ATSP], gms_toegevoegd = Toevoegingen
-            doorgevoerd in het GMS [GMS], ingepland = Live test ingepland [ATSP],
-            aanpassingen_geverifieerd = Live test goedgekeurd [AMS-Servicedesk], gms_verwijderd
-            = Criteria verwijderd in het GMS [AMS-Servicedesk], geannuleerd = Geannuleerd
+          description: "mutatie = Mutatie, ingediend = Ingediend [ATSP], afgewezen\
+            \ = Afgewezen [Risicobeheer], goedgekeurd = Goedgekeurd [Risicobeheer],\
+            \ aangepast_broker = Aangepast in de Broker [ATSP], gms_toegevoegd = Toevoegingen\
+            \ doorgevoerd in het GMS [GMS], ingepland = Live test ingepland [ATSP],\
+            \ aanpassingen_geverifieerd = Aanpassingen goedgekeurd [AMS-Servicedesk],\
+            \ gms_verwijderd = Criteria verwijderd in het GMS [AMS-Servicedesk], geannuleerd\
+            \ = Geannuleerd"
           readOnly: true
         status_changed:
           format: date-time
@@ -5367,12 +5610,14 @@ components:
           title: Laatst aangepast
           type: string
         user:
+          nullable: true
           readOnly: true
           type: integer
         gesloten:
           readOnly: true
           type: boolean
         gesloten_door:
+          nullable: true
           readOnly: true
           type: integer
         type:
@@ -5439,6 +5684,7 @@ components:
         bouwdelen_toevoegen: true
         omschrijving_van_wijziging: omschrijving_van_wijziging
         aansluiting: 0
+        type: null
         sectoren:
         - 6
         - 6
@@ -5511,11 +5757,11 @@ components:
         status:
           allOf:
           - $ref: '#/components/schemas/NieuweAansluitingZaakStatusEnum'
-          description: nieuw = Nieuw, ingediend = Ingediend ter aanvraag [ATSP], afgekeurd
-            = Aanvraag afgekeurd [Risicobeheer], realisatie = Aanvraag goedgekeurd
-            [Risicobeheer], gms_doorgevoerd = Doorgevoerd [GMS], technisch_gereed
-            = Live test inplannen [ATSP], goedgekeurd = Goedgekeurd [AMS-Servicedesk],
-            opgeleverd = Actief gezet [Risicobeheer], geannuleerd = Geannuleerd
+          description: "nieuw = Nieuw, ingediend = Ingediend ter aanvraag [ATSP],\
+            \ afgekeurd = Aanvraag afgekeurd [Risicobeheer], realisatie = Aanvraag\
+            \ goedgekeurd [Risicobeheer], gms_doorgevoerd = Doorgevoerd [GMS], technisch_gereed\
+            \ = Live test ingepland [ATSP], goedgekeurd = Goedgekeurd [AMS-Servicedesk],\
+            \ opgeleverd = Actief gezet [Risicobeheer], geannuleerd = Geannuleerd"
           readOnly: true
         status_changed:
           format: date-time
@@ -5533,12 +5779,14 @@ components:
           title: Laatst aangepast
           type: string
         user:
+          nullable: true
           readOnly: true
           type: integer
         gesloten:
           readOnly: true
           type: boolean
         gesloten_door:
+          nullable: true
           readOnly: true
           type: integer
         mogelijke_transities:
@@ -5596,6 +5844,7 @@ components:
       type: string
     NieuweAfsluitingZaakGoedkeurenRequest:
       example:
+        gebruiksfunctie: null
         description: description
       properties:
         description:
@@ -5847,6 +6096,33 @@ components:
         results:
           items:
             $ref: '#/components/schemas/AfsluitingZaak'
+          type: array
+      type: object
+    PaginatedAfspraakCreateList:
+      example:
+        next: http://api.example.org/accounts/?offset=400&limit=100
+        previous: http://api.example.org/accounts/?offset=200&limit=100
+        count: 123
+        results:
+        - id: 0
+        - id: 0
+      properties:
+        count:
+          example: 123
+          type: integer
+        next:
+          example: http://api.example.org/accounts/?offset=400&limit=100
+          format: uri
+          nullable: true
+          type: string
+        previous:
+          example: http://api.example.org/accounts/?offset=200&limit=100
+          format: uri
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: '#/components/schemas/AfspraakCreate'
           type: array
       type: object
     PaginatedAfspraakList:
@@ -6177,6 +6453,7 @@ components:
         results:
         - created: 2000-01-23T04:56:07.000+00:00
           gesloten_door: 5
+          type: null
           mogelijke_transities:
           - mogelijke_transities
           - mogelijke_transities
@@ -6192,6 +6469,7 @@ components:
           status: ""
         - created: 2000-01-23T04:56:07.000+00:00
           gesloten_door: 5
+          type: null
           mogelijke_transities:
           - mogelijke_transities
           - mogelijke_transities
@@ -6312,7 +6590,10 @@ components:
         previous: http://api.example.org/accounts/?offset=200&limit=100
         count: 123
         results:
-        - waarschuwingsadressen:
+        - storingscodes:
+          - null
+          - null
+          waarschuwingsadressen:
           - telefoonnummer: 5
             created: 2000-01-23T04:56:07.000+00:00
             modified: 2000-01-23T04:56:07.000+00:00
@@ -6341,7 +6622,10 @@ components:
           rijksdriehoekstel_x: rijksdriehoekstel_x
           id: 0
           rijksdriehoekstel_y: rijksdriehoekstel_y
-        - waarschuwingsadressen:
+        - storingscodes:
+          - null
+          - null
+          waarschuwingsadressen:
           - telefoonnummer: 5
             created: 2000-01-23T04:56:07.000+00:00
             modified: 2000-01-23T04:56:07.000+00:00
@@ -6472,9 +6756,9 @@ components:
         type:
           allOf:
           - $ref: '#/components/schemas/AansluitingBestandTypeEnum'
-          description: overige = Overige, pve = PVE, upd = UPD, nva = NVA (nota van
-            aanvulling), nvw = NVW (nota van wijzigingen), gms_mutatierapport = GMS
-            mutatierapport
+          description: "overige = Overige, pve = PVE, upd = UPD, nva = NVA (nota van\
+            \ aanvulling), nvw = NVW (nota van wijzigingen), gms_mutatierapport =\
+            \ GMS mutatierapport"
         file:
           format: binary
           nullable: true
@@ -6488,7 +6772,7 @@ components:
         toestand:
           allOf:
           - $ref: '#/components/schemas/MeldingStatus'
-          description: 0 = Passief, 1 = Actief
+          description: "0 = Passief, 1 = Actief"
           maximum: 2147483647
           minimum: -2147483648
       type: object
@@ -6531,7 +6815,7 @@ components:
       properties:
         voornaam:
           maxLength: 255
-          minLength: 1
+          nullable: true
           type: string
         tussenvoegsel:
           maxLength: 255
@@ -6559,8 +6843,8 @@ components:
       properties:
         toestand:
           allOf:
-          - $ref: '#/components/schemas/MeldingStatus'
-          description: 0 = Test, 1 = Actief
+          - $ref: '#/components/schemas/MeldingToestand'
+          description: "0 = Test, 1 = Actief, 2 = Passief"
           maximum: 2147483647
           minimum: -2147483648
           nullable: true
@@ -6656,6 +6940,9 @@ components:
       type: object
     Sector:
       example:
+        storingscodes:
+        - null
+        - null
         waarschuwingsadressen:
         - telefoonnummer: 5
           created: 2000-01-23T04:56:07.000+00:00
@@ -6721,14 +7008,14 @@ components:
           description: https://www.kadaster.nl/zakelijk/registraties/basisregistraties/rijksdriehoeksmeting/rijksdriehoeksstelsel
           format: decimal
           nullable: true
-          pattern: ^\d{0,6}(?:\.\d{0,16})?$
+          pattern: "^-?\\d{0,6}(?:\\.\\d{0,16})?$"
           title: X (RD-coördinaten)
           type: string
         rijksdriehoekstel_y:
           description: https://www.kadaster.nl/zakelijk/registraties/basisregistraties/rijksdriehoeksmeting/rijksdriehoeksstelsel
           format: decimal
           nullable: true
-          pattern: ^\d{0,6}(?:\.\d{0,16})?$
+          pattern: "^-?\\d{0,6}(?:\\.\\d{0,16})?$"
           title: Y (RD-coördinaten)
           type: string
         waarschuwingsadressen:
@@ -6747,8 +7034,8 @@ components:
           type: string
         toestand:
           allOf:
-          - $ref: '#/components/schemas/MeldingStatus'
-          description: 0 = Test, 1 = Actief
+          - $ref: '#/components/schemas/MeldingToestand'
+          description: "0 = Test, 1 = Actief, 2 = Passief"
           maximum: 2147483647
           minimum: -2147483648
           nullable: true
@@ -6762,6 +7049,11 @@ components:
         bag_lookup_id:
           maxLength: 100
           type: string
+        storingscodes:
+          items:
+            $ref: '#/components/schemas/StoringscodesEnum'
+          nullable: true
+          type: array
       required:
       - aansluiting
       - bag_id
@@ -6774,6 +7066,9 @@ components:
       type: object
     SectorRequest:
       example:
+        storingscodes:
+        - null
+        - null
         bag_lookup_id: bag_lookup_id
         plaats: plaats
         huisletter: huisletter
@@ -6818,20 +7113,20 @@ components:
           description: https://www.kadaster.nl/zakelijk/registraties/basisregistraties/rijksdriehoeksmeting/rijksdriehoeksstelsel
           format: decimal
           nullable: true
-          pattern: ^\d{0,6}(?:\.\d{0,16})?$
+          pattern: "^-?\\d{0,6}(?:\\.\\d{0,16})?$"
           title: X (RD-coördinaten)
           type: string
         rijksdriehoekstel_y:
           description: https://www.kadaster.nl/zakelijk/registraties/basisregistraties/rijksdriehoeksmeting/rijksdriehoeksstelsel
           format: decimal
           nullable: true
-          pattern: ^\d{0,6}(?:\.\d{0,16})?$
+          pattern: "^-?\\d{0,6}(?:\\.\\d{0,16})?$"
           title: Y (RD-coördinaten)
           type: string
         toestand:
           allOf:
-          - $ref: '#/components/schemas/MeldingStatus'
-          description: 0 = Test, 1 = Actief
+          - $ref: '#/components/schemas/MeldingToestand'
+          description: "0 = Test, 1 = Actief, 2 = Passief"
           maximum: 2147483647
           minimum: -2147483648
           nullable: true
@@ -6842,6 +7137,11 @@ components:
         bag_lookup_id:
           maxLength: 100
           type: string
+        storingscodes:
+          items:
+            $ref: '#/components/schemas/StoringscodesEnum'
+          nullable: true
+          type: array
       required:
       - naam
       - nummer
@@ -6852,12 +7152,242 @@ components:
       properties:
         toestand:
           allOf:
-          - $ref: '#/components/schemas/MeldingStatus'
-          description: 0 = Test, 1 = Actief
+          - $ref: '#/components/schemas/MeldingToestand'
+          description: "0 = Test, 1 = Actief, 2 = Passief"
           maximum: 2147483647
           minimum: -2147483648
           nullable: true
       type: object
+    SectorWrite:
+      example:
+        storingscodes:
+        - null
+        - null
+        waarschuwingsadressen:
+        - telefoonnummer: 5
+          created: 2000-01-23T04:56:07.000+00:00
+          modified: 2000-01-23T04:56:07.000+00:00
+          id: 5
+          prioriteit: -1158723813
+        - telefoonnummer: 5
+          created: 2000-01-23T04:56:07.000+00:00
+          modified: 2000-01-23T04:56:07.000+00:00
+          id: 5
+          prioriteit: -1158723813
+        bag_lookup_id: bag_lookup_id
+        plaats: plaats
+        created: 2000-01-23T04:56:07.000+00:00
+        huisletter: huisletter
+        postcode: postcode
+        naam: naam
+        toestand: ""
+        nummer: -1517921766
+        toevoeging: toevoeging
+        gebruiksfunctie: ""
+        bag_id: bag_id
+        straat: straat
+        huisnummer: huisnummer
+        aansluiting: 6
+        modified: 2000-01-23T04:56:07.000+00:00
+        rijksdriehoekstel_x: rijksdriehoekstel_x
+        id: 0
+        rijksdriehoekstel_y: rijksdriehoekstel_y
+      properties:
+        id:
+          readOnly: true
+          type: integer
+        aansluiting:
+          readOnly: true
+          type: integer
+        nummer:
+          maximum: 2147483647
+          minimum: -2147483648
+          type: integer
+        naam:
+          maxLength: 255
+          type: string
+        straat:
+          maxLength: 255
+          type: string
+        huisnummer:
+          maxLength: 22
+          type: string
+        huisletter:
+          maxLength: 22
+          type: string
+        toevoeging:
+          maxLength: 22
+          type: string
+        postcode:
+          maxLength: 7
+          type: string
+        plaats:
+          maxLength: 255
+          type: string
+        rijksdriehoekstel_x:
+          description: https://www.kadaster.nl/zakelijk/registraties/basisregistraties/rijksdriehoeksmeting/rijksdriehoeksstelsel
+          format: decimal
+          nullable: true
+          pattern: "^-?\\d{0,6}(?:\\.\\d{0,16})?$"
+          title: X (RD-coördinaten)
+          type: string
+        rijksdriehoekstel_y:
+          description: https://www.kadaster.nl/zakelijk/registraties/basisregistraties/rijksdriehoeksmeting/rijksdriehoeksstelsel
+          format: decimal
+          nullable: true
+          pattern: "^-?\\d{0,6}(?:\\.\\d{0,16})?$"
+          title: Y (RD-coördinaten)
+          type: string
+        waarschuwingsadressen:
+          items:
+            $ref: '#/components/schemas/Waarschuwingsadres'
+          readOnly: true
+          type: array
+        created:
+          format: date-time
+          readOnly: true
+          title: Toegevoegd
+          type: string
+        modified:
+          format: date-time
+          readOnly: true
+          type: string
+        toestand:
+          allOf:
+          - $ref: '#/components/schemas/MeldingToestand'
+          description: "0 = Test, 1 = Actief, 2 = Passief"
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        gebruiksfunctie:
+          allOf:
+          - $ref: '#/components/schemas/GebruiksfunctieEnum'
+          nullable: true
+        bag_id:
+          readOnly: true
+          type: string
+        bag_lookup_id:
+          maxLength: 100
+          type: string
+        storingscodes:
+          items:
+            $ref: '#/components/schemas/StoringscodesEnum'
+          nullable: true
+          type: array
+      required:
+      - aansluiting
+      - bag_id
+      - created
+      - id
+      - modified
+      - naam
+      - nummer
+      - waarschuwingsadressen
+      type: object
+    SectorWriteRequest:
+      example:
+        storingscodes:
+        - null
+        - null
+        bag_lookup_id: bag_lookup_id
+        plaats: plaats
+        huisletter: huisletter
+        postcode: postcode
+        naam: naam
+        toestand: ""
+        nummer: -1803530559
+        toevoeging: toevoeging
+        gebruiksfunctie: ""
+        straat: straat
+        huisnummer: huisnummer
+        telefoonnummers:
+        - 6
+        - 6
+        rijksdriehoekstel_x: rijksdriehoekstel_x
+        rijksdriehoekstel_y: rijksdriehoekstel_y
+      properties:
+        nummer:
+          maximum: 2147483647
+          minimum: -2147483648
+          type: integer
+        naam:
+          maxLength: 255
+          minLength: 1
+          type: string
+        straat:
+          maxLength: 255
+          type: string
+        huisnummer:
+          maxLength: 22
+          type: string
+        huisletter:
+          maxLength: 22
+          type: string
+        toevoeging:
+          maxLength: 22
+          type: string
+        postcode:
+          maxLength: 7
+          type: string
+        plaats:
+          maxLength: 255
+          type: string
+        rijksdriehoekstel_x:
+          description: https://www.kadaster.nl/zakelijk/registraties/basisregistraties/rijksdriehoeksmeting/rijksdriehoeksstelsel
+          format: decimal
+          nullable: true
+          pattern: "^-?\\d{0,6}(?:\\.\\d{0,16})?$"
+          title: X (RD-coördinaten)
+          type: string
+        rijksdriehoekstel_y:
+          description: https://www.kadaster.nl/zakelijk/registraties/basisregistraties/rijksdriehoeksmeting/rijksdriehoeksstelsel
+          format: decimal
+          nullable: true
+          pattern: "^-?\\d{0,6}(?:\\.\\d{0,16})?$"
+          title: Y (RD-coördinaten)
+          type: string
+        toestand:
+          allOf:
+          - $ref: '#/components/schemas/MeldingToestand'
+          description: "0 = Test, 1 = Actief, 2 = Passief"
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        gebruiksfunctie:
+          allOf:
+          - $ref: '#/components/schemas/GebruiksfunctieEnum'
+          nullable: true
+        bag_lookup_id:
+          maxLength: 100
+          type: string
+        storingscodes:
+          items:
+            $ref: '#/components/schemas/StoringscodesEnum'
+          nullable: true
+          type: array
+        telefoonnummers:
+          description: "List of telefoonnummer id's to turn into a list of Waarschuwingsadres.\
+            \ The order of the list is mapped to priority, starting by 1"
+          items:
+            type: integer
+            writeOnly: true
+          type: array
+          writeOnly: true
+      required:
+      - naam
+      - nummer
+      - telefoonnummers
+      type: object
+    StoringscodesEnum:
+      enum:
+      - geen
+      - bmc
+      - smc
+      - gdc
+      - pzi
+      - bluscentrale
+      - raw_installatie
+      type: string
     Telefoonnummer:
       example:
         omschrijving: omschrijving

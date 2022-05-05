@@ -15,17 +15,51 @@ Method | HTTP request | Description
 
 ## AansluitingenAanwezigeCriteriaDestroy
 
-> AansluitingenAanwezigeCriteriaDestroy(ctx, id)
+> AansluitingenAanwezigeCriteriaDestroy(ctx, id).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.AanwezigeCriteriaApi.AansluitingenAanwezigeCriteriaDestroy(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `AanwezigeCriteriaApi.AansluitingenAanwezigeCriteriaDestroy``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiAansluitingenAanwezigeCriteriaDestroyRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -47,28 +81,55 @@ Name | Type | Description  | Notes
 
 ## AansluitingenAanwezigeCriteriaPartialUpdate
 
-> AanwezigCriterium AansluitingenAanwezigeCriteriaPartialUpdate(ctx, id, optional)
+> AanwezigCriterium AansluitingenAanwezigeCriteriaPartialUpdate(ctx, id).PatchedAanwezigCriteriumRequest(patchedAanwezigCriteriumRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    patchedAanwezigCriteriumRequest := *openapiclient.NewPatchedAanwezigCriteriumRequest() // PatchedAanwezigCriteriumRequest |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.AanwezigeCriteriaApi.AansluitingenAanwezigeCriteriaPartialUpdate(context.Background(), id).PatchedAanwezigCriteriumRequest(patchedAanwezigCriteriumRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `AanwezigeCriteriaApi.AansluitingenAanwezigeCriteriaPartialUpdate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `AansluitingenAanwezigeCriteriaPartialUpdate`: AanwezigCriterium
+    fmt.Fprintf(os.Stdout, "Response from `AanwezigeCriteriaApi.AansluitingenAanwezigeCriteriaPartialUpdate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
- **optional** | ***AansluitingenAanwezigeCriteriaPartialUpdateOpts** | optional parameters | nil if no parameters
+**id** | **int32** |  | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a AansluitingenAanwezigeCriteriaPartialUpdateOpts struct
+Other parameters are passed through a pointer to a apiAansluitingenAanwezigeCriteriaPartialUpdateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **patchedAanwezigCriteriumRequest** | [**optional.Interface of PatchedAanwezigCriteriumRequest**](PatchedAanwezigCriteriumRequest.md)|  | 
+ **patchedAanwezigCriteriumRequest** | [**PatchedAanwezigCriteriumRequest**](PatchedAanwezigCriteriumRequest.md) |  | 
 
 ### Return type
 
@@ -90,17 +151,53 @@ Name | Type | Description  | Notes
 
 ## AansluitingenAanwezigeCriteriaRetrieve
 
-> AanwezigCriterium AansluitingenAanwezigeCriteriaRetrieve(ctx, id)
+> AanwezigCriterium AansluitingenAanwezigeCriteriaRetrieve(ctx, id).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.AanwezigeCriteriaApi.AansluitingenAanwezigeCriteriaRetrieve(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `AanwezigeCriteriaApi.AansluitingenAanwezigeCriteriaRetrieve``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `AansluitingenAanwezigeCriteriaRetrieve`: AanwezigCriterium
+    fmt.Fprintf(os.Stdout, "Response from `AanwezigeCriteriaApi.AansluitingenAanwezigeCriteriaRetrieve`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiAansluitingenAanwezigeCriteriaRetrieveRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -122,18 +219,55 @@ Name | Type | Description  | Notes
 
 ## AansluitingenAanwezigeCriteriaUpdate
 
-> AanwezigCriterium AansluitingenAanwezigeCriteriaUpdate(ctx, id, aanwezigCriteriumRequest)
+> AanwezigCriterium AansluitingenAanwezigeCriteriaUpdate(ctx, id).AanwezigCriteriumRequest(aanwezigCriteriumRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    aanwezigCriteriumRequest := *openapiclient.NewAanwezigCriteriumRequest(int32(123)) // AanwezigCriteriumRequest | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.AanwezigeCriteriaApi.AansluitingenAanwezigeCriteriaUpdate(context.Background(), id).AanwezigCriteriumRequest(aanwezigCriteriumRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `AanwezigeCriteriaApi.AansluitingenAanwezigeCriteriaUpdate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `AansluitingenAanwezigeCriteriaUpdate`: AanwezigCriterium
+    fmt.Fprintf(os.Stdout, "Response from `AanwezigeCriteriaApi.AansluitingenAanwezigeCriteriaUpdate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
-**aanwezigCriteriumRequest** | [**AanwezigCriteriumRequest**](AanwezigCriteriumRequest.md)|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiAansluitingenAanwezigeCriteriaUpdateRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **aanwezigCriteriumRequest** | [**AanwezigCriteriumRequest**](AanwezigCriteriumRequest.md) |  | 
 
 ### Return type
 
@@ -155,18 +289,55 @@ Name | Type | Description  | Notes
 
 ## AansluitingenSectorenAanwezigeCriteriaCreate
 
-> AanwezigCriterium AansluitingenSectorenAanwezigeCriteriaCreate(ctx, id, aanwezigCriteriumRequest)
+> AanwezigCriterium AansluitingenSectorenAanwezigeCriteriaCreate(ctx, id).AanwezigCriteriumRequest(aanwezigCriteriumRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    aanwezigCriteriumRequest := *openapiclient.NewAanwezigCriteriumRequest(int32(123)) // AanwezigCriteriumRequest | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.AanwezigeCriteriaApi.AansluitingenSectorenAanwezigeCriteriaCreate(context.Background(), id).AanwezigCriteriumRequest(aanwezigCriteriumRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `AanwezigeCriteriaApi.AansluitingenSectorenAanwezigeCriteriaCreate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `AansluitingenSectorenAanwezigeCriteriaCreate`: AanwezigCriterium
+    fmt.Fprintf(os.Stdout, "Response from `AanwezigeCriteriaApi.AansluitingenSectorenAanwezigeCriteriaCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
-**aanwezigCriteriumRequest** | [**AanwezigCriteriumRequest**](AanwezigCriteriumRequest.md)|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiAansluitingenSectorenAanwezigeCriteriaCreateRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **aanwezigCriteriumRequest** | [**AanwezigCriteriumRequest**](AanwezigCriteriumRequest.md) |  | 
 
 ### Return type
 
@@ -188,29 +359,57 @@ Name | Type | Description  | Notes
 
 ## AansluitingenSectorenAanwezigeCriteriaList
 
-> PaginatedAanwezigCriteriumList AansluitingenSectorenAanwezigeCriteriaList(ctx, id, optional)
+> PaginatedAanwezigCriteriumList AansluitingenSectorenAanwezigeCriteriaList(ctx, id).Limit(limit).Offset(offset).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    limit := int32(56) // int32 | Number of results to return per page. (optional)
+    offset := int32(56) // int32 | The initial index from which to return the results. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.AanwezigeCriteriaApi.AansluitingenSectorenAanwezigeCriteriaList(context.Background(), id).Limit(limit).Offset(offset).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `AanwezigeCriteriaApi.AansluitingenSectorenAanwezigeCriteriaList``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `AansluitingenSectorenAanwezigeCriteriaList`: PaginatedAanwezigCriteriumList
+    fmt.Fprintf(os.Stdout, "Response from `AanwezigeCriteriaApi.AansluitingenSectorenAanwezigeCriteriaList`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
- **optional** | ***AansluitingenSectorenAanwezigeCriteriaListOpts** | optional parameters | nil if no parameters
+**id** | **int32** |  | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a AansluitingenSectorenAanwezigeCriteriaListOpts struct
+Other parameters are passed through a pointer to a apiAansluitingenSectorenAanwezigeCriteriaListRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **limit** | **optional.Int32**| Number of results to return per page. | 
- **offset** | **optional.Int32**| The initial index from which to return the results. | 
+ **limit** | **int32** | Number of results to return per page. | 
+ **offset** | **int32** | The initial index from which to return the results. | 
 
 ### Return type
 
