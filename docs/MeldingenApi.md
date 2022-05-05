@@ -10,34 +10,66 @@ Method | HTTP request | Description
 
 ## MeldingenList
 
-> PaginatedMeldingList MeldingenList(ctx, optional)
+> PaginatedMeldingList MeldingenList(ctx).Actueel(actueel).CreatedAfter(createdAfter).CreatedBefore(createdBefore).Criterium(criterium).Limit(limit).ModifiedAfter(modifiedAfter).ModifiedBefore(modifiedBefore).Offset(offset).Toestand(toestand).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    "time"
+    openapiclient "./openapi"
+)
+
+func main() {
+    actueel := true // bool |  (optional)
+    createdAfter := time.Now() // time.Time |  (optional)
+    createdBefore := time.Now() // time.Time |  (optional)
+    criterium := int32(56) // int32 |  (optional)
+    limit := int32(56) // int32 | Number of results to return per page. (optional)
+    modifiedAfter := time.Now() // time.Time |  (optional)
+    modifiedBefore := time.Now() // time.Time |  (optional)
+    offset := int32(56) // int32 | The initial index from which to return the results. (optional)
+    toestand := int32(56) // int32 | 0 = Actief, 1 = Test, 2 = Passief (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.MeldingenApi.MeldingenList(context.Background()).Actueel(actueel).CreatedAfter(createdAfter).CreatedBefore(createdBefore).Criterium(criterium).Limit(limit).ModifiedAfter(modifiedAfter).ModifiedBefore(modifiedBefore).Offset(offset).Toestand(toestand).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `MeldingenApi.MeldingenList``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `MeldingenList`: PaginatedMeldingList
+    fmt.Fprintf(os.Stdout, "Response from `MeldingenApi.MeldingenList`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiMeldingenListRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
- **optional** | ***MeldingenListOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-
-Optional parameters are passed through a pointer to a MeldingenListOpts struct
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **actueel** | **optional.Bool**|  | 
- **createdAfter** | **optional.Time**|  | 
- **createdBefore** | **optional.Time**|  | 
- **criterium** | **optional.Int32**|  | 
- **limit** | **optional.Int32**| Number of results to return per page. | 
- **modifiedAfter** | **optional.Time**|  | 
- **modifiedBefore** | **optional.Time**|  | 
- **offset** | **optional.Int32**| The initial index from which to return the results. | 
- **toestand** | **optional.Int32**| 0 &#x3D; Actief, 1 &#x3D; test, 2 &#x3D; Passief | 
+ **actueel** | **bool** |  | 
+ **createdAfter** | **time.Time** |  | 
+ **createdBefore** | **time.Time** |  | 
+ **criterium** | **int32** |  | 
+ **limit** | **int32** | Number of results to return per page. | 
+ **modifiedAfter** | **time.Time** |  | 
+ **modifiedBefore** | **time.Time** |  | 
+ **offset** | **int32** | The initial index from which to return the results. | 
+ **toestand** | **int32** | 0 &#x3D; Actief, 1 &#x3D; Test, 2 &#x3D; Passief | 
 
 ### Return type
 

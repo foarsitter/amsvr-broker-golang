@@ -10,28 +10,51 @@ Method | HTTP request | Description
 
 ## SchemaJsonRetrieve
 
-> map[string]interface{} SchemaJsonRetrieve(ctx, optional)
+> map[string]interface{} SchemaJsonRetrieve(ctx).Lang(lang).Execute()
 
 
 
-OpenApi3 schema for this API. Format can be selected via content negotiation.  - YAML: application/vnd.oai.openapi - JSON: application/vnd.oai.openapi+json
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    lang := "lang_example" // string |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.SchemaJsonApi.SchemaJsonRetrieve(context.Background()).Lang(lang).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `SchemaJsonApi.SchemaJsonRetrieve``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `SchemaJsonRetrieve`: map[string]interface{}
+    fmt.Fprintf(os.Stdout, "Response from `SchemaJsonApi.SchemaJsonRetrieve`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiSchemaJsonRetrieveRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
- **optional** | ***SchemaJsonRetrieveOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-
-Optional parameters are passed through a pointer to a SchemaJsonRetrieveOpts struct
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **lang** | **optional.String**|  | 
+ **lang** | **string** |  | 
 
 ### Return type
 

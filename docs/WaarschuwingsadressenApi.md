@@ -15,20 +15,57 @@ Method | HTTP request | Description
 
 ## AansluitingenSectorenWaarschuwingsadressenCreate
 
-> Waarschuwingsadres AansluitingenSectorenWaarschuwingsadressenCreate(ctx, id, waarschuwingsadresRequest)
+> Waarschuwingsadres AansluitingenSectorenWaarschuwingsadressenCreate(ctx, id).WaarschuwingsadresRequest(waarschuwingsadresRequest).Execute()
 
 
 
-Waarschuwingsadres toevoegen
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    waarschuwingsadresRequest := *openapiclient.NewWaarschuwingsadresRequest(int32(123)) // WaarschuwingsadresRequest | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.WaarschuwingsadressenApi.AansluitingenSectorenWaarschuwingsadressenCreate(context.Background(), id).WaarschuwingsadresRequest(waarschuwingsadresRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `WaarschuwingsadressenApi.AansluitingenSectorenWaarschuwingsadressenCreate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `AansluitingenSectorenWaarschuwingsadressenCreate`: Waarschuwingsadres
+    fmt.Fprintf(os.Stdout, "Response from `WaarschuwingsadressenApi.AansluitingenSectorenWaarschuwingsadressenCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
-**waarschuwingsadresRequest** | [**WaarschuwingsadresRequest**](WaarschuwingsadresRequest.md)|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiAansluitingenSectorenWaarschuwingsadressenCreateRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **waarschuwingsadresRequest** | [**WaarschuwingsadresRequest**](WaarschuwingsadresRequest.md) |  | 
 
 ### Return type
 
@@ -50,31 +87,59 @@ Name | Type | Description  | Notes
 
 ## AansluitingenSectorenWaarschuwingsadressenList
 
-> PaginatedWaarschuwingsadresList AansluitingenSectorenWaarschuwingsadressenList(ctx, id, optional)
+> PaginatedWaarschuwingsadresList AansluitingenSectorenWaarschuwingsadressenList(ctx, id).Limit(limit).Offset(offset).Execute()
 
 
 
-Overzicht van waarschuwingsadressen van de opgegeven sector
 
-### Required Parameters
+
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := "id_example" // string | A unique integer value identifying this Sector
+    limit := int32(56) // int32 | Number of results to return per page. (optional)
+    offset := int32(56) // int32 | The initial index from which to return the results. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.WaarschuwingsadressenApi.AansluitingenSectorenWaarschuwingsadressenList(context.Background(), id).Limit(limit).Offset(offset).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `WaarschuwingsadressenApi.AansluitingenSectorenWaarschuwingsadressenList``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `AansluitingenSectorenWaarschuwingsadressenList`: PaginatedWaarschuwingsadresList
+    fmt.Fprintf(os.Stdout, "Response from `WaarschuwingsadressenApi.AansluitingenSectorenWaarschuwingsadressenList`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **string**| A unique integer value identifying this Sector | 
- **optional** | ***AansluitingenSectorenWaarschuwingsadressenListOpts** | optional parameters | nil if no parameters
+**id** | **string** | A unique integer value identifying this Sector | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a AansluitingenSectorenWaarschuwingsadressenListOpts struct
+Other parameters are passed through a pointer to a apiAansluitingenSectorenWaarschuwingsadressenListRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **limit** | **optional.Int32**| Number of results to return per page. | 
- **offset** | **optional.Int32**| The initial index from which to return the results. | 
+ **limit** | **int32** | Number of results to return per page. | 
+ **offset** | **int32** | The initial index from which to return the results. | 
 
 ### Return type
 
@@ -96,17 +161,51 @@ Name | Type | Description  | Notes
 
 ## AansluitingenWaarschuwingsadressenDestroy
 
-> AansluitingenWaarschuwingsadressenDestroy(ctx, id)
+> AansluitingenWaarschuwingsadressenDestroy(ctx, id).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.WaarschuwingsadressenApi.AansluitingenWaarschuwingsadressenDestroy(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `WaarschuwingsadressenApi.AansluitingenWaarschuwingsadressenDestroy``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiAansluitingenWaarschuwingsadressenDestroyRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -128,28 +227,55 @@ Name | Type | Description  | Notes
 
 ## AansluitingenWaarschuwingsadressenPartialUpdate
 
-> Waarschuwingsadres AansluitingenWaarschuwingsadressenPartialUpdate(ctx, id, optional)
+> Waarschuwingsadres AansluitingenWaarschuwingsadressenPartialUpdate(ctx, id).PatchedWaarschuwingsadresRequest(patchedWaarschuwingsadresRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    patchedWaarschuwingsadresRequest := *openapiclient.NewPatchedWaarschuwingsadresRequest() // PatchedWaarschuwingsadresRequest |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.WaarschuwingsadressenApi.AansluitingenWaarschuwingsadressenPartialUpdate(context.Background(), id).PatchedWaarschuwingsadresRequest(patchedWaarschuwingsadresRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `WaarschuwingsadressenApi.AansluitingenWaarschuwingsadressenPartialUpdate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `AansluitingenWaarschuwingsadressenPartialUpdate`: Waarschuwingsadres
+    fmt.Fprintf(os.Stdout, "Response from `WaarschuwingsadressenApi.AansluitingenWaarschuwingsadressenPartialUpdate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
- **optional** | ***AansluitingenWaarschuwingsadressenPartialUpdateOpts** | optional parameters | nil if no parameters
+**id** | **int32** |  | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a AansluitingenWaarschuwingsadressenPartialUpdateOpts struct
+Other parameters are passed through a pointer to a apiAansluitingenWaarschuwingsadressenPartialUpdateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **patchedWaarschuwingsadresRequest** | [**optional.Interface of PatchedWaarschuwingsadresRequest**](PatchedWaarschuwingsadresRequest.md)|  | 
+ **patchedWaarschuwingsadresRequest** | [**PatchedWaarschuwingsadresRequest**](PatchedWaarschuwingsadresRequest.md) |  | 
 
 ### Return type
 
@@ -171,17 +297,53 @@ Name | Type | Description  | Notes
 
 ## AansluitingenWaarschuwingsadressenRetrieve
 
-> Waarschuwingsadres AansluitingenWaarschuwingsadressenRetrieve(ctx, id)
+> Waarschuwingsadres AansluitingenWaarschuwingsadressenRetrieve(ctx, id).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.WaarschuwingsadressenApi.AansluitingenWaarschuwingsadressenRetrieve(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `WaarschuwingsadressenApi.AansluitingenWaarschuwingsadressenRetrieve``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `AansluitingenWaarschuwingsadressenRetrieve`: Waarschuwingsadres
+    fmt.Fprintf(os.Stdout, "Response from `WaarschuwingsadressenApi.AansluitingenWaarschuwingsadressenRetrieve`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiAansluitingenWaarschuwingsadressenRetrieveRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -203,18 +365,55 @@ Name | Type | Description  | Notes
 
 ## AansluitingenWaarschuwingsadressenUpdate
 
-> Waarschuwingsadres AansluitingenWaarschuwingsadressenUpdate(ctx, id, waarschuwingsadresRequest)
+> Waarschuwingsadres AansluitingenWaarschuwingsadressenUpdate(ctx, id).WaarschuwingsadresRequest(waarschuwingsadresRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    waarschuwingsadresRequest := *openapiclient.NewWaarschuwingsadresRequest(int32(123)) // WaarschuwingsadresRequest | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.WaarschuwingsadressenApi.AansluitingenWaarschuwingsadressenUpdate(context.Background(), id).WaarschuwingsadresRequest(waarschuwingsadresRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `WaarschuwingsadressenApi.AansluitingenWaarschuwingsadressenUpdate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `AansluitingenWaarschuwingsadressenUpdate`: Waarschuwingsadres
+    fmt.Fprintf(os.Stdout, "Response from `WaarschuwingsadressenApi.AansluitingenWaarschuwingsadressenUpdate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
-**waarschuwingsadresRequest** | [**WaarschuwingsadresRequest**](WaarschuwingsadresRequest.md)|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiAansluitingenWaarschuwingsadressenUpdateRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **waarschuwingsadresRequest** | [**WaarschuwingsadresRequest**](WaarschuwingsadresRequest.md) |  | 
 
 ### Return type
 

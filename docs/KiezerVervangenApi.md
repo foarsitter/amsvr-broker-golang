@@ -15,18 +15,55 @@ Method | HTTP request | Description
 
 ## ZakenKiezerVervangenAnnulerenCreate
 
-> KiezerVervangenZaak ZakenKiezerVervangenAnnulerenCreate(ctx, id, kiezerVervangenZaakRequest)
+> KiezerVervangenZaak ZakenKiezerVervangenAnnulerenCreate(ctx, id).KiezerVervangenZaakRequest(kiezerVervangenZaakRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    kiezerVervangenZaakRequest := *openapiclient.NewKiezerVervangenZaakRequest("Description_example") // KiezerVervangenZaakRequest | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.KiezerVervangenApi.ZakenKiezerVervangenAnnulerenCreate(context.Background(), id).KiezerVervangenZaakRequest(kiezerVervangenZaakRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `KiezerVervangenApi.ZakenKiezerVervangenAnnulerenCreate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenKiezerVervangenAnnulerenCreate`: KiezerVervangenZaak
+    fmt.Fprintf(os.Stdout, "Response from `KiezerVervangenApi.ZakenKiezerVervangenAnnulerenCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
-**kiezerVervangenZaakRequest** | [**KiezerVervangenZaakRequest**](KiezerVervangenZaakRequest.md)|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiZakenKiezerVervangenAnnulerenCreateRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **kiezerVervangenZaakRequest** | [**KiezerVervangenZaakRequest**](KiezerVervangenZaakRequest.md) |  | 
 
 ### Return type
 
@@ -48,18 +85,55 @@ Name | Type | Description  | Notes
 
 ## ZakenKiezerVervangenGoedkeurenCreate
 
-> KiezerVervangenZaak ZakenKiezerVervangenGoedkeurenCreate(ctx, id, kiezerVervangenZaakRequest)
+> KiezerVervangenZaak ZakenKiezerVervangenGoedkeurenCreate(ctx, id).KiezerVervangenZaakRequest(kiezerVervangenZaakRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    kiezerVervangenZaakRequest := *openapiclient.NewKiezerVervangenZaakRequest("Description_example") // KiezerVervangenZaakRequest | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.KiezerVervangenApi.ZakenKiezerVervangenGoedkeurenCreate(context.Background(), id).KiezerVervangenZaakRequest(kiezerVervangenZaakRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `KiezerVervangenApi.ZakenKiezerVervangenGoedkeurenCreate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenKiezerVervangenGoedkeurenCreate`: KiezerVervangenZaak
+    fmt.Fprintf(os.Stdout, "Response from `KiezerVervangenApi.ZakenKiezerVervangenGoedkeurenCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
-**kiezerVervangenZaakRequest** | [**KiezerVervangenZaakRequest**](KiezerVervangenZaakRequest.md)|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiZakenKiezerVervangenGoedkeurenCreateRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **kiezerVervangenZaakRequest** | [**KiezerVervangenZaakRequest**](KiezerVervangenZaakRequest.md) |  | 
 
 ### Return type
 
@@ -81,18 +155,55 @@ Name | Type | Description  | Notes
 
 ## ZakenKiezerVervangenIndienenCreate
 
-> KiezerVervangenZaakIndienen ZakenKiezerVervangenIndienenCreate(ctx, aansluitnummer, kiezerVervangenZaakIndienenRequest)
+> KiezerVervangenZaakIndienen ZakenKiezerVervangenIndienenCreate(ctx, aansluitnummer).KiezerVervangenZaakIndienenRequest(kiezerVervangenZaakIndienenRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    aansluitnummer := "aansluitnummer_example" // string | 
+    kiezerVervangenZaakIndienenRequest := *openapiclient.NewKiezerVervangenZaakIndienenRequest(int32(123)) // KiezerVervangenZaakIndienenRequest | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.KiezerVervangenApi.ZakenKiezerVervangenIndienenCreate(context.Background(), aansluitnummer).KiezerVervangenZaakIndienenRequest(kiezerVervangenZaakIndienenRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `KiezerVervangenApi.ZakenKiezerVervangenIndienenCreate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenKiezerVervangenIndienenCreate`: KiezerVervangenZaakIndienen
+    fmt.Fprintf(os.Stdout, "Response from `KiezerVervangenApi.ZakenKiezerVervangenIndienenCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**aansluitnummer** | **string**|  | 
-**kiezerVervangenZaakIndienenRequest** | [**KiezerVervangenZaakIndienenRequest**](KiezerVervangenZaakIndienenRequest.md)|  | 
+**aansluitnummer** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiZakenKiezerVervangenIndienenCreateRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **kiezerVervangenZaakIndienenRequest** | [**KiezerVervangenZaakIndienenRequest**](KiezerVervangenZaakIndienenRequest.md) |  | 
 
 ### Return type
 
@@ -114,28 +225,55 @@ Name | Type | Description  | Notes
 
 ## ZakenKiezerVervangenInplannenCreate
 
-> KiezerVervangenZaakInplannen ZakenKiezerVervangenInplannenCreate(ctx, id, optional)
+> KiezerVervangenZaakInplannen ZakenKiezerVervangenInplannenCreate(ctx, id).KiezerVervangenZaakInplannenRequest(kiezerVervangenZaakInplannenRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    kiezerVervangenZaakInplannenRequest := *openapiclient.NewKiezerVervangenZaakInplannenRequest() // KiezerVervangenZaakInplannenRequest |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.KiezerVervangenApi.ZakenKiezerVervangenInplannenCreate(context.Background(), id).KiezerVervangenZaakInplannenRequest(kiezerVervangenZaakInplannenRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `KiezerVervangenApi.ZakenKiezerVervangenInplannenCreate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenKiezerVervangenInplannenCreate`: KiezerVervangenZaakInplannen
+    fmt.Fprintf(os.Stdout, "Response from `KiezerVervangenApi.ZakenKiezerVervangenInplannenCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
- **optional** | ***ZakenKiezerVervangenInplannenCreateOpts** | optional parameters | nil if no parameters
+**id** | **int32** |  | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a ZakenKiezerVervangenInplannenCreateOpts struct
+Other parameters are passed through a pointer to a apiZakenKiezerVervangenInplannenCreateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **kiezerVervangenZaakInplannenRequest** | [**optional.Interface of KiezerVervangenZaakInplannenRequest**](KiezerVervangenZaakInplannenRequest.md)|  | 
+ **kiezerVervangenZaakInplannenRequest** | [**KiezerVervangenZaakInplannenRequest**](KiezerVervangenZaakInplannenRequest.md) |  | 
 
 ### Return type
 
@@ -157,29 +295,55 @@ Name | Type | Description  | Notes
 
 ## ZakenKiezerVervangenList
 
-> PaginatedKiezerVervangenZaakList ZakenKiezerVervangenList(ctx, optional)
+> PaginatedKiezerVervangenZaakList ZakenKiezerVervangenList(ctx).Gesloten(gesloten).Limit(limit).Offset(offset).Status(status).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    gesloten := true // bool |  (optional)
+    limit := int32(56) // int32 | Number of results to return per page. (optional)
+    offset := int32(56) // int32 | The initial index from which to return the results. (optional)
+    status := []string{"Status_example"} // []string | nieuw = Nieuw, ingediend = Ingediend [ATSP], goedgekeurd = Goedgekeurd [AMS-Servicedesk], ingepland = Live test ingepland [ATSP], doorgevoerd = Doorgevoerd [GMS], geannuleerd = Geannuleerd (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.KiezerVervangenApi.ZakenKiezerVervangenList(context.Background()).Gesloten(gesloten).Limit(limit).Offset(offset).Status(status).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `KiezerVervangenApi.ZakenKiezerVervangenList``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenKiezerVervangenList`: PaginatedKiezerVervangenZaakList
+    fmt.Fprintf(os.Stdout, "Response from `KiezerVervangenApi.ZakenKiezerVervangenList`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiZakenKiezerVervangenListRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
- **optional** | ***ZakenKiezerVervangenListOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-
-Optional parameters are passed through a pointer to a ZakenKiezerVervangenListOpts struct
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **gesloten** | **optional.Bool**|  | 
- **limit** | **optional.Int32**| Number of results to return per page. | 
- **offset** | **optional.Int32**| The initial index from which to return the results. | 
- **status** | **optional.String**| nieuw &#x3D; Nieuw, ingediend &#x3D; Ingediend [ATSP], ingepland &#x3D; Live test ingepland [ATSP], goedgekeurd &#x3D; Goedgekeurd [AMS-Servicedesk], doorgevoerd &#x3D; Doorgevoerd [GMS], geannuleerd &#x3D; Geannuleerd | 
+ **gesloten** | **bool** |  | 
+ **limit** | **int32** | Number of results to return per page. | 
+ **offset** | **int32** | The initial index from which to return the results. | 
+ **status** | **[]string** | nieuw &#x3D; Nieuw, ingediend &#x3D; Ingediend [ATSP], goedgekeurd &#x3D; Goedgekeurd [AMS-Servicedesk], ingepland &#x3D; Live test ingepland [ATSP], doorgevoerd &#x3D; Doorgevoerd [GMS], geannuleerd &#x3D; Geannuleerd | 
 
 ### Return type
 
@@ -201,17 +365,53 @@ Name | Type | Description  | Notes
 
 ## ZakenKiezerVervangenRetrieve
 
-> KiezerVervangenZaak ZakenKiezerVervangenRetrieve(ctx, id)
+> KiezerVervangenZaak ZakenKiezerVervangenRetrieve(ctx, id).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.KiezerVervangenApi.ZakenKiezerVervangenRetrieve(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `KiezerVervangenApi.ZakenKiezerVervangenRetrieve``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenKiezerVervangenRetrieve`: KiezerVervangenZaak
+    fmt.Fprintf(os.Stdout, "Response from `KiezerVervangenApi.ZakenKiezerVervangenRetrieve`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiZakenKiezerVervangenRetrieveRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 

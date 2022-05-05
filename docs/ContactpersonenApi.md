@@ -14,17 +14,51 @@ Method | HTTP request | Description
 
 ## AansluitingenContactpersonenDestroy
 
-> AansluitingenContactpersonenDestroy(ctx, id)
+> AansluitingenContactpersonenDestroy(ctx, id).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.ContactpersonenApi.AansluitingenContactpersonenDestroy(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ContactpersonenApi.AansluitingenContactpersonenDestroy``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiAansluitingenContactpersonenDestroyRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -46,28 +80,55 @@ Name | Type | Description  | Notes
 
 ## AansluitingenContactpersonenPartialUpdate
 
-> ContactPersoon AansluitingenContactpersonenPartialUpdate(ctx, id, optional)
+> ContactPersoon AansluitingenContactpersonenPartialUpdate(ctx, id).PatchedContactPersoonRequest(patchedContactPersoonRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    patchedContactPersoonRequest := *openapiclient.NewPatchedContactPersoonRequest() // PatchedContactPersoonRequest |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.ContactpersonenApi.AansluitingenContactpersonenPartialUpdate(context.Background(), id).PatchedContactPersoonRequest(patchedContactPersoonRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ContactpersonenApi.AansluitingenContactpersonenPartialUpdate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `AansluitingenContactpersonenPartialUpdate`: ContactPersoon
+    fmt.Fprintf(os.Stdout, "Response from `ContactpersonenApi.AansluitingenContactpersonenPartialUpdate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
- **optional** | ***AansluitingenContactpersonenPartialUpdateOpts** | optional parameters | nil if no parameters
+**id** | **int32** |  | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a AansluitingenContactpersonenPartialUpdateOpts struct
+Other parameters are passed through a pointer to a apiAansluitingenContactpersonenPartialUpdateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **patchedContactPersoonRequest** | [**optional.Interface of PatchedContactPersoonRequest**](PatchedContactPersoonRequest.md)|  | 
+ **patchedContactPersoonRequest** | [**PatchedContactPersoonRequest**](PatchedContactPersoonRequest.md) |  | 
 
 ### Return type
 
@@ -89,17 +150,53 @@ Name | Type | Description  | Notes
 
 ## AansluitingenContactpersonenRetrieve
 
-> ContactPersoon AansluitingenContactpersonenRetrieve(ctx, id)
+> ContactPersoon AansluitingenContactpersonenRetrieve(ctx, id).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.ContactpersonenApi.AansluitingenContactpersonenRetrieve(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ContactpersonenApi.AansluitingenContactpersonenRetrieve``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `AansluitingenContactpersonenRetrieve`: ContactPersoon
+    fmt.Fprintf(os.Stdout, "Response from `ContactpersonenApi.AansluitingenContactpersonenRetrieve`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiAansluitingenContactpersonenRetrieveRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -121,18 +218,55 @@ Name | Type | Description  | Notes
 
 ## AansluitingenContactpersonenUpdate
 
-> ContactPersoon AansluitingenContactpersonenUpdate(ctx, id, contactPersoonRequest)
+> ContactPersoon AansluitingenContactpersonenUpdate(ctx, id).ContactPersoonRequest(contactPersoonRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    contactPersoonRequest := *openapiclient.NewContactPersoonRequest("Achternaam_example") // ContactPersoonRequest | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.ContactpersonenApi.AansluitingenContactpersonenUpdate(context.Background(), id).ContactPersoonRequest(contactPersoonRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ContactpersonenApi.AansluitingenContactpersonenUpdate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `AansluitingenContactpersonenUpdate`: ContactPersoon
+    fmt.Fprintf(os.Stdout, "Response from `ContactpersonenApi.AansluitingenContactpersonenUpdate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
-**contactPersoonRequest** | [**ContactPersoonRequest**](ContactPersoonRequest.md)|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiAansluitingenContactpersonenUpdateRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **contactPersoonRequest** | [**ContactPersoonRequest**](ContactPersoonRequest.md) |  | 
 
 ### Return type
 
@@ -154,32 +288,62 @@ Name | Type | Description  | Notes
 
 ## ContactpersoonList
 
-> PaginatedContactPersoonList ContactpersoonList(ctx, optional)
+> PaginatedContactPersoonList ContactpersoonList(ctx).CreatedAfter(createdAfter).CreatedBefore(createdBefore).Limit(limit).ModifiedAfter(modifiedAfter).ModifiedBefore(modifiedBefore).Offset(offset).Voornaam(voornaam).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    "time"
+    openapiclient "./openapi"
+)
+
+func main() {
+    createdAfter := time.Now() // time.Time |  (optional)
+    createdBefore := time.Now() // time.Time |  (optional)
+    limit := int32(56) // int32 | Number of results to return per page. (optional)
+    modifiedAfter := time.Now() // time.Time |  (optional)
+    modifiedBefore := time.Now() // time.Time |  (optional)
+    offset := int32(56) // int32 | The initial index from which to return the results. (optional)
+    voornaam := "voornaam_example" // string |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.ContactpersonenApi.ContactpersoonList(context.Background()).CreatedAfter(createdAfter).CreatedBefore(createdBefore).Limit(limit).ModifiedAfter(modifiedAfter).ModifiedBefore(modifiedBefore).Offset(offset).Voornaam(voornaam).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `ContactpersonenApi.ContactpersoonList``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ContactpersoonList`: PaginatedContactPersoonList
+    fmt.Fprintf(os.Stdout, "Response from `ContactpersonenApi.ContactpersoonList`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiContactpersoonListRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
- **optional** | ***ContactpersoonListOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-
-Optional parameters are passed through a pointer to a ContactpersoonListOpts struct
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **createdAfter** | **optional.Time**|  | 
- **createdBefore** | **optional.Time**|  | 
- **limit** | **optional.Int32**| Number of results to return per page. | 
- **modifiedAfter** | **optional.Time**|  | 
- **modifiedBefore** | **optional.Time**|  | 
- **offset** | **optional.Int32**| The initial index from which to return the results. | 
- **voornaam** | **optional.String**|  | 
+ **createdAfter** | **time.Time** |  | 
+ **createdBefore** | **time.Time** |  | 
+ **limit** | **int32** | Number of results to return per page. | 
+ **modifiedAfter** | **time.Time** |  | 
+ **modifiedBefore** | **time.Time** |  | 
+ **offset** | **int32** | The initial index from which to return the results. | 
+ **voornaam** | **string** |  | 
 
 ### Return type
 

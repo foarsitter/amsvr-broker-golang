@@ -10,31 +10,55 @@ Method | HTTP request | Description
 
 ## AtspsList
 
-> PaginatedAtspList AtspsList(ctx, optional)
+> PaginatedATSPList AtspsList(ctx).Limit(limit).Offset(offset).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    limit := int32(56) // int32 | Number of results to return per page. (optional)
+    offset := int32(56) // int32 | The initial index from which to return the results. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.AtspsApi.AtspsList(context.Background()).Limit(limit).Offset(offset).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `AtspsApi.AtspsList``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `AtspsList`: PaginatedATSPList
+    fmt.Fprintf(os.Stdout, "Response from `AtspsApi.AtspsList`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiAtspsListRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
- **optional** | ***AtspsListOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-
-Optional parameters are passed through a pointer to a AtspsListOpts struct
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **limit** | **optional.Int32**| Number of results to return per page. | 
- **offset** | **optional.Int32**| The initial index from which to return the results. | 
+ **limit** | **int32** | Number of results to return per page. | 
+ **offset** | **int32** | The initial index from which to return the results. | 
 
 ### Return type
 
-[**PaginatedAtspList**](PaginatedATSPList.md)
+[**PaginatedATSPList**](PaginatedATSPList.md)
 
 ### Authorization
 

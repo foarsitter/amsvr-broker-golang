@@ -15,18 +15,55 @@ Method | HTTP request | Description
 
 ## AansluitingenContactpersonenTelefoonnummersCreate
 
-> Telefoonnummer AansluitingenContactpersonenTelefoonnummersCreate(ctx, id, telefoonnummerRequest)
+> Telefoonnummer AansluitingenContactpersonenTelefoonnummersCreate(ctx, id).TelefoonnummerRequest(telefoonnummerRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    telefoonnummerRequest := *openapiclient.NewTelefoonnummerRequest("Telefoonnummer_example") // TelefoonnummerRequest | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.TelefoonnummersApi.AansluitingenContactpersonenTelefoonnummersCreate(context.Background(), id).TelefoonnummerRequest(telefoonnummerRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `TelefoonnummersApi.AansluitingenContactpersonenTelefoonnummersCreate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `AansluitingenContactpersonenTelefoonnummersCreate`: Telefoonnummer
+    fmt.Fprintf(os.Stdout, "Response from `TelefoonnummersApi.AansluitingenContactpersonenTelefoonnummersCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
-**telefoonnummerRequest** | [**TelefoonnummerRequest**](TelefoonnummerRequest.md)|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiAansluitingenContactpersonenTelefoonnummersCreateRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **telefoonnummerRequest** | [**TelefoonnummerRequest**](TelefoonnummerRequest.md) |  | 
 
 ### Return type
 
@@ -48,29 +85,57 @@ Name | Type | Description  | Notes
 
 ## AansluitingenContactpersonenTelefoonnummersList
 
-> PaginatedTelefoonnummerList AansluitingenContactpersonenTelefoonnummersList(ctx, id, optional)
+> PaginatedTelefoonnummerList AansluitingenContactpersonenTelefoonnummersList(ctx, id).Limit(limit).Offset(offset).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    limit := int32(56) // int32 | Number of results to return per page. (optional)
+    offset := int32(56) // int32 | The initial index from which to return the results. (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.TelefoonnummersApi.AansluitingenContactpersonenTelefoonnummersList(context.Background(), id).Limit(limit).Offset(offset).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `TelefoonnummersApi.AansluitingenContactpersonenTelefoonnummersList``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `AansluitingenContactpersonenTelefoonnummersList`: PaginatedTelefoonnummerList
+    fmt.Fprintf(os.Stdout, "Response from `TelefoonnummersApi.AansluitingenContactpersonenTelefoonnummersList`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
- **optional** | ***AansluitingenContactpersonenTelefoonnummersListOpts** | optional parameters | nil if no parameters
+**id** | **int32** |  | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a AansluitingenContactpersonenTelefoonnummersListOpts struct
+Other parameters are passed through a pointer to a apiAansluitingenContactpersonenTelefoonnummersListRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **limit** | **optional.Int32**| Number of results to return per page. | 
- **offset** | **optional.Int32**| The initial index from which to return the results. | 
+ **limit** | **int32** | Number of results to return per page. | 
+ **offset** | **int32** | The initial index from which to return the results. | 
 
 ### Return type
 
@@ -92,17 +157,51 @@ Name | Type | Description  | Notes
 
 ## AansluitingenTelefoonnummersDestroy
 
-> AansluitingenTelefoonnummersDestroy(ctx, id)
+> AansluitingenTelefoonnummersDestroy(ctx, id).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.TelefoonnummersApi.AansluitingenTelefoonnummersDestroy(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `TelefoonnummersApi.AansluitingenTelefoonnummersDestroy``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiAansluitingenTelefoonnummersDestroyRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -124,28 +223,55 @@ Name | Type | Description  | Notes
 
 ## AansluitingenTelefoonnummersPartialUpdate
 
-> Telefoonnummer AansluitingenTelefoonnummersPartialUpdate(ctx, id, optional)
+> Telefoonnummer AansluitingenTelefoonnummersPartialUpdate(ctx, id).PatchedTelefoonnummerRequest(patchedTelefoonnummerRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    patchedTelefoonnummerRequest := *openapiclient.NewPatchedTelefoonnummerRequest() // PatchedTelefoonnummerRequest |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.TelefoonnummersApi.AansluitingenTelefoonnummersPartialUpdate(context.Background(), id).PatchedTelefoonnummerRequest(patchedTelefoonnummerRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `TelefoonnummersApi.AansluitingenTelefoonnummersPartialUpdate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `AansluitingenTelefoonnummersPartialUpdate`: Telefoonnummer
+    fmt.Fprintf(os.Stdout, "Response from `TelefoonnummersApi.AansluitingenTelefoonnummersPartialUpdate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
- **optional** | ***AansluitingenTelefoonnummersPartialUpdateOpts** | optional parameters | nil if no parameters
+**id** | **int32** |  | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a AansluitingenTelefoonnummersPartialUpdateOpts struct
+Other parameters are passed through a pointer to a apiAansluitingenTelefoonnummersPartialUpdateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **patchedTelefoonnummerRequest** | [**optional.Interface of PatchedTelefoonnummerRequest**](PatchedTelefoonnummerRequest.md)|  | 
+ **patchedTelefoonnummerRequest** | [**PatchedTelefoonnummerRequest**](PatchedTelefoonnummerRequest.md) |  | 
 
 ### Return type
 
@@ -167,17 +293,53 @@ Name | Type | Description  | Notes
 
 ## AansluitingenTelefoonnummersRetrieve
 
-> Telefoonnummer AansluitingenTelefoonnummersRetrieve(ctx, id)
+> Telefoonnummer AansluitingenTelefoonnummersRetrieve(ctx, id).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.TelefoonnummersApi.AansluitingenTelefoonnummersRetrieve(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `TelefoonnummersApi.AansluitingenTelefoonnummersRetrieve``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `AansluitingenTelefoonnummersRetrieve`: Telefoonnummer
+    fmt.Fprintf(os.Stdout, "Response from `TelefoonnummersApi.AansluitingenTelefoonnummersRetrieve`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiAansluitingenTelefoonnummersRetrieveRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -199,18 +361,55 @@ Name | Type | Description  | Notes
 
 ## AansluitingenTelefoonnummersUpdate
 
-> Telefoonnummer AansluitingenTelefoonnummersUpdate(ctx, id, telefoonnummerRequest)
+> Telefoonnummer AansluitingenTelefoonnummersUpdate(ctx, id).TelefoonnummerRequest(telefoonnummerRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    telefoonnummerRequest := *openapiclient.NewTelefoonnummerRequest("Telefoonnummer_example") // TelefoonnummerRequest | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.TelefoonnummersApi.AansluitingenTelefoonnummersUpdate(context.Background(), id).TelefoonnummerRequest(telefoonnummerRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `TelefoonnummersApi.AansluitingenTelefoonnummersUpdate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `AansluitingenTelefoonnummersUpdate`: Telefoonnummer
+    fmt.Fprintf(os.Stdout, "Response from `TelefoonnummersApi.AansluitingenTelefoonnummersUpdate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
-**telefoonnummerRequest** | [**TelefoonnummerRequest**](TelefoonnummerRequest.md)|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiAansluitingenTelefoonnummersUpdateRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **telefoonnummerRequest** | [**TelefoonnummerRequest**](TelefoonnummerRequest.md) |  | 
 
 ### Return type
 

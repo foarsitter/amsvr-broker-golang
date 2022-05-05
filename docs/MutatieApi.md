@@ -19,28 +19,55 @@ Method | HTTP request | Description
 
 ## ZakenMutatieAangepastBrokerCreate
 
-> MutatieZaak ZakenMutatieAangepastBrokerCreate(ctx, id, optional)
+> MutatieZaak ZakenMutatieAangepastBrokerCreate(ctx, id).MutatieZaakGoedkeurenRequest(mutatieZaakGoedkeurenRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    mutatieZaakGoedkeurenRequest := *openapiclient.NewMutatieZaakGoedkeurenRequest() // MutatieZaakGoedkeurenRequest |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.MutatieApi.ZakenMutatieAangepastBrokerCreate(context.Background(), id).MutatieZaakGoedkeurenRequest(mutatieZaakGoedkeurenRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `MutatieApi.ZakenMutatieAangepastBrokerCreate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenMutatieAangepastBrokerCreate`: MutatieZaak
+    fmt.Fprintf(os.Stdout, "Response from `MutatieApi.ZakenMutatieAangepastBrokerCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
- **optional** | ***ZakenMutatieAangepastBrokerCreateOpts** | optional parameters | nil if no parameters
+**id** | **int32** |  | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a ZakenMutatieAangepastBrokerCreateOpts struct
+Other parameters are passed through a pointer to a apiZakenMutatieAangepastBrokerCreateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **mutatieZaakGoedkeurenRequest** | [**optional.Interface of MutatieZaakGoedkeurenRequest**](MutatieZaakGoedkeurenRequest.md)|  | 
+ **mutatieZaakGoedkeurenRequest** | [**MutatieZaakGoedkeurenRequest**](MutatieZaakGoedkeurenRequest.md) |  | 
 
 ### Return type
 
@@ -62,28 +89,55 @@ Name | Type | Description  | Notes
 
 ## ZakenMutatieAccorderenCreate
 
-> MutatieZaak ZakenMutatieAccorderenCreate(ctx, id, optional)
+> MutatieZaak ZakenMutatieAccorderenCreate(ctx, id).MutatieZaakGoedkeurenRequest(mutatieZaakGoedkeurenRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    mutatieZaakGoedkeurenRequest := *openapiclient.NewMutatieZaakGoedkeurenRequest() // MutatieZaakGoedkeurenRequest |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.MutatieApi.ZakenMutatieAccorderenCreate(context.Background(), id).MutatieZaakGoedkeurenRequest(mutatieZaakGoedkeurenRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `MutatieApi.ZakenMutatieAccorderenCreate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenMutatieAccorderenCreate`: MutatieZaak
+    fmt.Fprintf(os.Stdout, "Response from `MutatieApi.ZakenMutatieAccorderenCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
- **optional** | ***ZakenMutatieAccorderenCreateOpts** | optional parameters | nil if no parameters
+**id** | **int32** |  | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a ZakenMutatieAccorderenCreateOpts struct
+Other parameters are passed through a pointer to a apiZakenMutatieAccorderenCreateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **mutatieZaakGoedkeurenRequest** | [**optional.Interface of MutatieZaakGoedkeurenRequest**](MutatieZaakGoedkeurenRequest.md)|  | 
+ **mutatieZaakGoedkeurenRequest** | [**MutatieZaakGoedkeurenRequest**](MutatieZaakGoedkeurenRequest.md) |  | 
 
 ### Return type
 
@@ -105,28 +159,55 @@ Name | Type | Description  | Notes
 
 ## ZakenMutatieAfwijzenCreate
 
-> MutatieZaak ZakenMutatieAfwijzenCreate(ctx, id, optional)
+> MutatieZaak ZakenMutatieAfwijzenCreate(ctx, id).MutatieZaakGoedkeurenRequest(mutatieZaakGoedkeurenRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    mutatieZaakGoedkeurenRequest := *openapiclient.NewMutatieZaakGoedkeurenRequest() // MutatieZaakGoedkeurenRequest |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.MutatieApi.ZakenMutatieAfwijzenCreate(context.Background(), id).MutatieZaakGoedkeurenRequest(mutatieZaakGoedkeurenRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `MutatieApi.ZakenMutatieAfwijzenCreate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenMutatieAfwijzenCreate`: MutatieZaak
+    fmt.Fprintf(os.Stdout, "Response from `MutatieApi.ZakenMutatieAfwijzenCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
- **optional** | ***ZakenMutatieAfwijzenCreateOpts** | optional parameters | nil if no parameters
+**id** | **int32** |  | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a ZakenMutatieAfwijzenCreateOpts struct
+Other parameters are passed through a pointer to a apiZakenMutatieAfwijzenCreateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **mutatieZaakGoedkeurenRequest** | [**optional.Interface of MutatieZaakGoedkeurenRequest**](MutatieZaakGoedkeurenRequest.md)|  | 
+ **mutatieZaakGoedkeurenRequest** | [**MutatieZaakGoedkeurenRequest**](MutatieZaakGoedkeurenRequest.md) |  | 
 
 ### Return type
 
@@ -148,28 +229,55 @@ Name | Type | Description  | Notes
 
 ## ZakenMutatieAnnulerenCreate
 
-> MutatieZaak ZakenMutatieAnnulerenCreate(ctx, id, optional)
+> MutatieZaak ZakenMutatieAnnulerenCreate(ctx, id).MutatieZaakGoedkeurenRequest(mutatieZaakGoedkeurenRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    mutatieZaakGoedkeurenRequest := *openapiclient.NewMutatieZaakGoedkeurenRequest() // MutatieZaakGoedkeurenRequest |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.MutatieApi.ZakenMutatieAnnulerenCreate(context.Background(), id).MutatieZaakGoedkeurenRequest(mutatieZaakGoedkeurenRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `MutatieApi.ZakenMutatieAnnulerenCreate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenMutatieAnnulerenCreate`: MutatieZaak
+    fmt.Fprintf(os.Stdout, "Response from `MutatieApi.ZakenMutatieAnnulerenCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
- **optional** | ***ZakenMutatieAnnulerenCreateOpts** | optional parameters | nil if no parameters
+**id** | **int32** |  | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a ZakenMutatieAnnulerenCreateOpts struct
+Other parameters are passed through a pointer to a apiZakenMutatieAnnulerenCreateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **mutatieZaakGoedkeurenRequest** | [**optional.Interface of MutatieZaakGoedkeurenRequest**](MutatieZaakGoedkeurenRequest.md)|  | 
+ **mutatieZaakGoedkeurenRequest** | [**MutatieZaakGoedkeurenRequest**](MutatieZaakGoedkeurenRequest.md) |  | 
 
 ### Return type
 
@@ -191,28 +299,55 @@ Name | Type | Description  | Notes
 
 ## ZakenMutatieGoedkeurenCreate
 
-> MutatieZaak ZakenMutatieGoedkeurenCreate(ctx, id, optional)
+> MutatieZaak ZakenMutatieGoedkeurenCreate(ctx, id).MutatieZaakGoedkeurenRequest(mutatieZaakGoedkeurenRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    mutatieZaakGoedkeurenRequest := *openapiclient.NewMutatieZaakGoedkeurenRequest() // MutatieZaakGoedkeurenRequest |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.MutatieApi.ZakenMutatieGoedkeurenCreate(context.Background(), id).MutatieZaakGoedkeurenRequest(mutatieZaakGoedkeurenRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `MutatieApi.ZakenMutatieGoedkeurenCreate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenMutatieGoedkeurenCreate`: MutatieZaak
+    fmt.Fprintf(os.Stdout, "Response from `MutatieApi.ZakenMutatieGoedkeurenCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
- **optional** | ***ZakenMutatieGoedkeurenCreateOpts** | optional parameters | nil if no parameters
+**id** | **int32** |  | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a ZakenMutatieGoedkeurenCreateOpts struct
+Other parameters are passed through a pointer to a apiZakenMutatieGoedkeurenCreateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **mutatieZaakGoedkeurenRequest** | [**optional.Interface of MutatieZaakGoedkeurenRequest**](MutatieZaakGoedkeurenRequest.md)|  | 
+ **mutatieZaakGoedkeurenRequest** | [**MutatieZaakGoedkeurenRequest**](MutatieZaakGoedkeurenRequest.md) |  | 
 
 ### Return type
 
@@ -234,17 +369,49 @@ Name | Type | Description  | Notes
 
 ## ZakenMutatieIndienenCreate
 
-> MutatieZaak ZakenMutatieIndienenCreate(ctx, mutatieZaakRequest)
+> MutatieZaak ZakenMutatieIndienenCreate(ctx).MutatieZaakRequest(mutatieZaakRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    mutatieZaakRequest := *openapiclient.NewMutatieZaakRequest(int32(123), "OmschrijvingVanWijziging_example") // MutatieZaakRequest | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.MutatieApi.ZakenMutatieIndienenCreate(context.Background()).MutatieZaakRequest(mutatieZaakRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `MutatieApi.ZakenMutatieIndienenCreate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenMutatieIndienenCreate`: MutatieZaak
+    fmt.Fprintf(os.Stdout, "Response from `MutatieApi.ZakenMutatieIndienenCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiZakenMutatieIndienenCreateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**mutatieZaakRequest** | [**MutatieZaakRequest**](MutatieZaakRequest.md)|  | 
+ **mutatieZaakRequest** | [**MutatieZaakRequest**](MutatieZaakRequest.md) |  | 
 
 ### Return type
 
@@ -266,28 +433,55 @@ Name | Type | Description  | Notes
 
 ## ZakenMutatieInplannenCreate
 
-> MutatieZaakAangepastInDeBroker ZakenMutatieInplannenCreate(ctx, id, optional)
+> MutatieZaakAangepastInDeBroker ZakenMutatieInplannenCreate(ctx, id).MutatieZaakAangepastInDeBrokerRequest(mutatieZaakAangepastInDeBrokerRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    mutatieZaakAangepastInDeBrokerRequest := *openapiclient.NewMutatieZaakAangepastInDeBrokerRequest() // MutatieZaakAangepastInDeBrokerRequest |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.MutatieApi.ZakenMutatieInplannenCreate(context.Background(), id).MutatieZaakAangepastInDeBrokerRequest(mutatieZaakAangepastInDeBrokerRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `MutatieApi.ZakenMutatieInplannenCreate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenMutatieInplannenCreate`: MutatieZaakAangepastInDeBroker
+    fmt.Fprintf(os.Stdout, "Response from `MutatieApi.ZakenMutatieInplannenCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
- **optional** | ***ZakenMutatieInplannenCreateOpts** | optional parameters | nil if no parameters
+**id** | **int32** |  | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a ZakenMutatieInplannenCreateOpts struct
+Other parameters are passed through a pointer to a apiZakenMutatieInplannenCreateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **mutatieZaakAangepastInDeBrokerRequest** | [**optional.Interface of MutatieZaakAangepastInDeBrokerRequest**](MutatieZaakAangepastInDeBrokerRequest.md)|  | 
+ **mutatieZaakAangepastInDeBrokerRequest** | [**MutatieZaakAangepastInDeBrokerRequest**](MutatieZaakAangepastInDeBrokerRequest.md) |  | 
 
 ### Return type
 
@@ -309,30 +503,57 @@ Name | Type | Description  | Notes
 
 ## ZakenMutatieList
 
-> PaginatedMutatieZaakList ZakenMutatieList(ctx, optional)
+> PaginatedMutatieZaakList ZakenMutatieList(ctx).Gesloten(gesloten).Limit(limit).Offset(offset).Status(status).Type_(type_).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    gesloten := true // bool |  (optional)
+    limit := int32(56) // int32 | Number of results to return per page. (optional)
+    offset := int32(56) // int32 | The initial index from which to return the results. (optional)
+    status := []string{"Status_example"} // []string | mutatie = Mutatie, ingediend = Ingediend [ATSP], afgewezen = Afgewezen [Risicobeheer], goedgekeurd = Goedgekeurd [Risicobeheer], aangepast_broker = Aangepast in de Broker [ATSP], gms_toegevoegd = Toevoegingen doorgevoerd in het GMS [GMS], ingepland = Live test ingepland [ATSP], aanpassingen_geverifieerd = Aanpassingen goedgekeurd [AMS-Servicedesk], gms_verwijderd = Criteria verwijderd in het GMS [AMS-Servicedesk], geannuleerd = Geannuleerd (optional)
+    type_ := "type__example" // string |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.MutatieApi.ZakenMutatieList(context.Background()).Gesloten(gesloten).Limit(limit).Offset(offset).Status(status).Type_(type_).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `MutatieApi.ZakenMutatieList``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenMutatieList`: PaginatedMutatieZaakList
+    fmt.Fprintf(os.Stdout, "Response from `MutatieApi.ZakenMutatieList`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiZakenMutatieListRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
- **optional** | ***ZakenMutatieListOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-
-Optional parameters are passed through a pointer to a ZakenMutatieListOpts struct
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **gesloten** | **optional.Bool**|  | 
- **limit** | **optional.Int32**| Number of results to return per page. | 
- **offset** | **optional.Int32**| The initial index from which to return the results. | 
- **status** | **optional.String**| mutatie &#x3D; Mutatie, ingediend &#x3D; Ingediend [ATSP], afgewezen &#x3D; Afgewezen [Risicobeheer], goedgekeurd &#x3D; Goedgekeurd [Risicobeheer], aangepast_broker &#x3D; Aangepast in de Broker [ATSP], gms_toegevoegd &#x3D; Toevoegingen doorgevoerd in het GMS [GMS], ingepland &#x3D; Live test ingepland [ATSP], aanpassingen_geverifieerd &#x3D; Live test goedgekeurd [AMS-Servicedesk], gms_verwijderd &#x3D; Criteria verwijderd in het GMS [AMS-Servicedesk], geannuleerd &#x3D; Geannuleerd | 
- **type_** | **optional.String**|  | 
+ **gesloten** | **bool** |  | 
+ **limit** | **int32** | Number of results to return per page. | 
+ **offset** | **int32** | The initial index from which to return the results. | 
+ **status** | **[]string** | mutatie &#x3D; Mutatie, ingediend &#x3D; Ingediend [ATSP], afgewezen &#x3D; Afgewezen [Risicobeheer], goedgekeurd &#x3D; Goedgekeurd [Risicobeheer], aangepast_broker &#x3D; Aangepast in de Broker [ATSP], gms_toegevoegd &#x3D; Toevoegingen doorgevoerd in het GMS [GMS], ingepland &#x3D; Live test ingepland [ATSP], aanpassingen_geverifieerd &#x3D; Aanpassingen goedgekeurd [AMS-Servicedesk], gms_verwijderd &#x3D; Criteria verwijderd in het GMS [AMS-Servicedesk], geannuleerd &#x3D; Geannuleerd | 
+ **type_** | **string** |  | 
 
 ### Return type
 
@@ -354,17 +575,53 @@ Name | Type | Description  | Notes
 
 ## ZakenMutatieRetrieve
 
-> MutatieZaak ZakenMutatieRetrieve(ctx, id)
+> MutatieZaak ZakenMutatieRetrieve(ctx, id).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.MutatieApi.ZakenMutatieRetrieve(context.Background(), id).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `MutatieApi.ZakenMutatieRetrieve``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenMutatieRetrieve`: MutatieZaak
+    fmt.Fprintf(os.Stdout, "Response from `MutatieApi.ZakenMutatieRetrieve`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
+**id** | **int32** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiZakenMutatieRetrieveRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
 ### Return type
 
@@ -386,28 +643,55 @@ Name | Type | Description  | Notes
 
 ## ZakenMutatieTechnischGereedCreate
 
-> MutatieZaakAangepastInDeBroker ZakenMutatieTechnischGereedCreate(ctx, id, optional)
+> MutatieZaakAangepastInDeBroker ZakenMutatieTechnischGereedCreate(ctx, id).MutatieZaakAangepastInDeBrokerRequest(mutatieZaakAangepastInDeBrokerRequest).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "./openapi"
+)
+
+func main() {
+    id := int32(56) // int32 | 
+    mutatieZaakAangepastInDeBrokerRequest := *openapiclient.NewMutatieZaakAangepastInDeBrokerRequest() // MutatieZaakAangepastInDeBrokerRequest |  (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.MutatieApi.ZakenMutatieTechnischGereedCreate(context.Background(), id).MutatieZaakAangepastInDeBrokerRequest(mutatieZaakAangepastInDeBrokerRequest).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `MutatieApi.ZakenMutatieTechnischGereedCreate``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `ZakenMutatieTechnischGereedCreate`: MutatieZaakAangepastInDeBroker
+    fmt.Fprintf(os.Stdout, "Response from `MutatieApi.ZakenMutatieTechnischGereedCreate`: %v\n", resp)
+}
+```
+
+### Path Parameters
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**id** | **int32**|  | 
- **optional** | ***ZakenMutatieTechnischGereedCreateOpts** | optional parameters | nil if no parameters
+**id** | **int32** |  | 
 
-### Optional Parameters
+### Other Parameters
 
-Optional parameters are passed through a pointer to a ZakenMutatieTechnischGereedCreateOpts struct
+Other parameters are passed through a pointer to a apiZakenMutatieTechnischGereedCreateRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **mutatieZaakAangepastInDeBrokerRequest** | [**optional.Interface of MutatieZaakAangepastInDeBrokerRequest**](MutatieZaakAangepastInDeBrokerRequest.md)|  | 
+ **mutatieZaakAangepastInDeBrokerRequest** | [**MutatieZaakAangepastInDeBrokerRequest**](MutatieZaakAangepastInDeBrokerRequest.md) |  | 
 
 ### Return type
 
